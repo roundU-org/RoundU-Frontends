@@ -1,10 +1,10 @@
-import { Home, CalendarCheck, Crown, User } from "lucide-react";
+import { Home, CalendarCheck, Heart, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
   { id: "home", label: "Home", icon: Home, path: "/home" },
   { id: "bookings", label: "Bookings", icon: CalendarCheck, path: "/bookings" },
-  { id: "subscription", label: "Subscription", icon: Crown, path: "/subscription" },
+  { id: "homecare", label: "Home Care", icon: Heart, path: "/home-care" },
   { id: "profile", label: "Profile", icon: User, path: "/profile" },
 ];
 

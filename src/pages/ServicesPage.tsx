@@ -21,8 +21,7 @@ const ServicesPage = () => {
               <ServiceCard
                 service={s}
                 onClick={() => {
-                  dispatch({ type: "SELECT_SERVICE", id: s.id });
-                  navigate(`/providers/${s.id}`);
+                  navigate(`/service-select/${s.id}`);
                 }}
               />
             </div>

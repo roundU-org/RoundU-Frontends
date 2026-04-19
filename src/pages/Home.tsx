@@ -1,5 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, MapPin, Bell, ChevronRight, Gift, Plus, Clock } from "lucide-react";
+import {
+  Search, MapPin, Bell, ChevronRight, Gift, Plus, Clock,
+  Menu, X, Home as HomeIcon, CalendarCheck, Heart, User,
+  Settings, HelpCircle, LogOut, Star, ShieldCheck, Smartphone,
+} from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { services, quickFixes, popularTasks } from "@/data/mockData";
 import { useApp } from "@/context/AppContext";
@@ -7,25 +12,139 @@ import { useApp } from "@/context/AppContext";
 const Home = () => {
   const navigate = useNavigate();
   const { user, dispatch, notifications } = useApp();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const browseServices = services.slice(0, 8);
 
   const goToProviders = (id: string) => {
-    dispatch({ type: "SELECT_SERVICE", id });
-    navigate(`/providers/${id}`);
+    navigate(`/service-select/${id}`);
   };
+
+  const menuItems = [
+    { icon: HomeIcon, label: "Home", path: "/home" },
+    { icon: CalendarCheck, label: "My Bookings", path: "/bookings" },
+    { icon: Heart, label: "Home Care Plan", path: "/home-care" },
+    { icon: Star, label: "Favorites", path: "/home" },
+    { icon: ShieldCheck, label: "Emergency", path: "/emergency" },
+    { icon: Smartphone, label: "Refer & Earn", path: "/home" },
+    { icon: Settings, label: "Settings", path: "/profile" },
+    { icon: HelpCircle, label: "Help & Support", path: "/home" },
+  ];
 
   return (
     <div className="min-h-full flex flex-col bg-[#F5F6FA] pb-24 relative">
+
+      {/* ═══════ SLIDE-OUT MENU OVERLAY ═══════ */}
+      <div
+        className={`fixed inset-0 z-50 transition-all duration-300 ${
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        {/* Backdrop */}
+        <div
+          className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+            menuOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setMenuOpen(false)}
+        />
+
+        {/* Drawer */}
+        <div
+          className={`absolute top-0 left-0 bottom-0 w-[280px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+            menuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          {/* Menu Header */}
+          <div className="px-5 pt-8 pb-5 bg-gradient-to-br from-[#152E4B] to-[#1C3D63] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            >
+              <X size={18} className="text-white" />
+            </button>
+
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="w-14 h-14 rounded-full bg-white/15 border-2 border-white/30 flex items-center justify-center">
+                <span className="text-xl font-extrabold text-white">{user.name.charAt(0)}</span>
+              </div>
+              <div>
+                <h3 className="text-white font-bold text-[15px]">{user.name}</h3>
+                <p className="text-white/60 text-[11px] mt-0.5">{user.phone}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 mt-4 relative z-10">
+              <div className="text-center">
+                <p className="text-white font-extrabold text-lg">4</p>
+                <p className="text-white/50 text-[9px] uppercase tracking-wider font-bold">Bookings</p>
+              </div>
+              <div className="w-px bg-white/20" />
+              <div className="text-center">
+                <p className="text-white font-extrabold text-lg">4.8</p>
+                <p className="text-white/50 text-[9px] uppercase tracking-wider font-bold">Rating</p>
+              </div>
+              <div className="w-px bg-white/20" />
+              <div className="text-center">
+                <p className="text-amber-400 font-extrabold text-lg">Free</p>
+                <p className="text-white/50 text-[9px] uppercase tracking-wider font-bold">Plan</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Menu Items */}
+          <div className="flex-1 py-3 overflow-y-auto">
+            {menuItems.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate(item.path);
+                }}
+                className="w-full flex items-center gap-3.5 px-5 py-3 hover:bg-[#F5F6FA] transition-colors text-left group"
+              >
+                <div className="w-9 h-9 rounded-xl bg-[#F5F6FA] group-hover:bg-[#152E4B]/10 flex items-center justify-center transition-colors">
+                  <item.icon size={18} className="text-[#152E4B]" strokeWidth={2} />
+                </div>
+                <span className="text-[14px] font-semibold text-[#030916]">{item.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Logout */}
+          <div className="p-4 border-t border-gray-100">
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                dispatch({ type: "LOGOUT" });
+                navigate("/");
+              }}
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-50 transition-colors"
+            >
+              <LogOut size={18} className="text-red-500" />
+              <span className="text-[14px] font-bold text-red-500">Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* ─── Header ─── */}
       <div className="px-5 pt-6 pb-4 flex items-center justify-between animate-fade-in bg-white">
-        <div>
-          <p className="text-[11px] text-gray-400 font-medium flex items-center gap-1">
-            <MapPin size={11} className="text-[#152E4B]" /> {user.address}
-          </p>
-          <h1 className="text-xl font-extrabold text-[#030916] mt-0.5">
-            Hi {user.name.split(" ")[0]}! 👋
-          </h1>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="w-10 h-10 rounded-full bg-[#F0F2F5] flex items-center justify-center active:scale-95 transition-transform"
+          >
+            <Menu size={20} className="text-[#152E4B]" />
+          </button>
+          <div>
+            <p className="text-[11px] text-gray-400 font-medium flex items-center gap-1">
+              <MapPin size={11} className="text-[#152E4B]" /> {user.address}
+            </p>
+            <h1 className="text-xl font-extrabold text-[#030916] mt-0.5">
+              Hi {user.name.split(" ")[0]}! 👋
+            </h1>
+          </div>
         </div>
         <button
           onClick={() => navigate("/profile")}
@@ -76,7 +195,6 @@ const Home = () => {
                 onClick={() => goToProviders(service.id)}
                 className="bg-white rounded-2xl p-4 text-left hover:shadow-md transition-all active:scale-[0.97] relative overflow-hidden border border-[#F0F2F5] shadow-[0_2px_12px_rgba(0,0,0,0.04)]"
               >
-                {/* Connected badge on first card */}
                 {index === 0 && (
                   <div className="absolute top-3 right-3">
                     <span className="text-[8px] font-extrabold tracking-wider uppercase bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">
@@ -131,7 +249,6 @@ const Home = () => {
                 key={task.id}
                 className="w-[260px] flex-shrink-0 bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-[#F0F2F5] snap-start"
               >
-                {/* Image */}
                 <div className="relative h-[140px] bg-gray-100 overflow-hidden">
                   <img
                     src={task.image}
@@ -144,7 +261,6 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-4">
                   <span className="text-[9px] font-extrabold tracking-[0.15em] uppercase text-[#A95D06]">
                     {task.category}

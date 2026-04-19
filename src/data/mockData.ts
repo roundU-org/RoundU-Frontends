@@ -9,6 +9,8 @@ export interface Service {
   label: string;
   icon: LucideIcon;
   desc: string;
+  commonProblems?: string[];
+  relatedServiceIds?: string[];
 }
 
 export interface Provider {
@@ -57,18 +59,39 @@ export interface ProviderRequest {
 }
 
 export const services: Service[] = [
-  { id: "electrician", label: "Electrician", icon: Zap, desc: "Wiring & fixtures" },
-  { id: "plumber", label: "Plumber", icon: Droplets, desc: "Pipes & drainage" },
-  { id: "cleaning", label: "Cleaning", icon: Sparkles, desc: "Deep & regular" },
-  { id: "carwash", label: "Car Wash", icon: Car, desc: "At your doorstep" },
-  { id: "mechanic", label: "Mechanic", icon: Wrench, desc: "Vehicle service" },
+  { 
+    id: "electrician", 
+    label: "Electrician", 
+    icon: Zap, 
+    desc: "Wiring & fixtures",
+    commonProblems: ["Fan repair", "Short circuit", "Switchboard issues", "New wiring", "MCB tripping"],
+    relatedServiceIds: ["ac", "security", "carpenter"]
+  },
+  { 
+    id: "plumber", 
+    label: "Plumber", 
+    icon: Droplets, 
+    desc: "Pipes & drainage",
+    commonProblems: ["Leaking pipes", "Tap repair", "Washbasin clog", "Water tanker", "Bathroom fittings"],
+    relatedServiceIds: ["cleaning", "pest", "painter"]
+  },
+  { 
+    id: "cleaning", 
+    label: "Cleaning", 
+    icon: Sparkles, 
+    desc: "Deep & regular",
+    commonProblems: ["Kitchen cleaning", "Bathroom deep clean", "Full home clean", "Sofa cleaning", "Pest control needed"],
+    relatedServiceIds: ["pest", "painter", "carwash"]
+  },
+  { id: "carwash", label: "Car Wash", icon: Car, desc: "At your doorstep", commonProblems: ["Exterior wash", "Interior detailing", "Full car spa"] },
+  { id: "mechanic", label: "Mechanic", icon: Wrench, desc: "Vehicle service", commonProblems: ["Brake issue", "Engine sound", "Oil change", "Battery jumpstart"] },
   { id: "pet", label: "Pet Care", icon: PawPrint, desc: "Grooming & vet" },
-  { id: "painter", label: "Painter", icon: Paintbrush, desc: "Interior & exterior" },
-  { id: "carpenter", label: "Carpenter", icon: Hammer, desc: "Furniture & fittings" },
-  { id: "pest", label: "Pest Control", icon: Bug, desc: "Home & office" },
+  { id: "painter", label: "Painter", icon: Paintbrush, desc: "Interior & exterior", commonProblems: ["Wall painting", "Waterproofing", "Texture work"] },
+  { id: "carpenter", label: "Carpenter", icon: Hammer, desc: "Furniture & fittings", commonProblems: ["Broken door", "Hinge repair", "New furniture", "Cupboard fix"] },
+  { id: "pest", label: "Pest Control", icon: Bug, desc: "Home & office", commonProblems: ["Termite treatment", "Cockroach control", "General pest", "Bed bugs"] },
   { id: "moving", label: "Packers", icon: Truck, desc: "Move & relocate" },
-  { id: "ac", label: "AC Service", icon: Wind, desc: "Install & maintain" },
-  { id: "security", label: "Security", icon: ShieldCheck, desc: "CCTV & alarms" },
+  { id: "ac", label: "AC Service", icon: Wind, desc: "Install & maintain", commonProblems: ["Gas leak", "AC not cooling", "Service/cleanup", "Dismantling", "Installation"] },
+  { id: "security", label: "Security", icon: ShieldCheck, desc: "CCTV & alarms", commonProblems: ["CCTV setup", "Camera repair", "Video doorbell", "Access control"] },
 ];
 
 export const getServiceById = (id: string) => services.find((s) => s.id === id);

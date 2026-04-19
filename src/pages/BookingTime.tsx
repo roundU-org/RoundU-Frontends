@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock } from "lucide-react";
 import { timeSlots } from "@/data/mockData";
@@ -8,6 +8,16 @@ const BookingTime = () => {
   const navigate = useNavigate();
   const { selectedDate, dispatch } = useApp();
   const [time, setTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && time) {
+        handleNext();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [time]);
 
   if (!selectedDate) {
     navigate("/booking/date", { replace: true });

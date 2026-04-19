@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { useApp } from "@/context/AppContext";
@@ -8,6 +8,16 @@ const BookingDate = () => {
   const { selectedProvider, dispatch } = useApp();
   const [month, setMonth] = useState(new Date());
   const [selected, setSelected] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && selected) {
+        handleNext();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selected]);
 
   if (!selectedProvider) {
     navigate("/home", { replace: true });

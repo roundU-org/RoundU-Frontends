@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Camera, MapPin } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -47,6 +47,16 @@ const PersonalDetails = () => {
   };
 
   const canProceed = dob && gender && address && city && pincode && bio.length > 5;
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && canProceed && document.activeElement?.tagName !== "TEXTAREA") {
+        handleNext();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [canProceed]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

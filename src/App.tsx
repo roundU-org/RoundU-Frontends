@@ -38,6 +38,7 @@ import PersonalDetails from "@/pages/provider/PersonalDetails";
 import DigiLockerKYC from "@/pages/provider/DigiLockerKYC";
 import GpsConsent from "@/pages/provider/GpsConsent";
 import PendingApproval from "@/pages/provider/PendingApproval";
+import ServiceSelection from "@/pages/ServiceSelection";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const AppRoutes = () => (
       <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
       <Route path="/search" element={<RequireAuth><SearchPage /></RequireAuth>} />
       <Route path="/services" element={<RequireAuth><ServicesPage /></RequireAuth>} />
+      <Route path="/service-select/:serviceId" element={<RequireAuth><ServiceSelection /></RequireAuth>} />
       <Route path="/providers/:serviceId" element={<RequireAuth><ProvidersPage /></RequireAuth>} />
       <Route path="/provider/:id" element={<RequireAuth><ProviderDetail /></RequireAuth>} />
       <Route path="/booking/date" element={<RequireAuth><BookingDate /></RequireAuth>} />
@@ -72,7 +74,8 @@ const AppRoutes = () => (
       <Route path="/rating/:id" element={<RequireAuth><Rating /></RequireAuth>} />
       <Route path="/bookings" element={<RequireAuth><Bookings /></RequireAuth>} />
       <Route path="/bookings/:id" element={<RequireAuth><BookingDetail /></RequireAuth>} />
-      <Route path="/subscription" element={<RequireAuth><Subscription /></RequireAuth>} />
+      <Route path="/home-care" element={<RequireAuth><Subscription /></RequireAuth>} />
+      <Route path="/subscription" element={<Navigate to="/home-care" replace />} />
       <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
       <Route path="/emergency" element={<RequireAuth><Emergency /></RequireAuth>} />
 

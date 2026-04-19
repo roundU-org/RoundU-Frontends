@@ -25,6 +25,7 @@ const OtpVerify = () => {
 
   const handleKeyDown = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !otp[i] && i > 0) refs.current[i - 1]?.focus();
+    if (e.key === "Enter" && otp.join("").length === 4) handleVerify();
   };
 
   const handleVerify = () => {

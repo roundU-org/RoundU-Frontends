@@ -44,6 +44,11 @@ const Login = () => {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && phone.length === 10) {
+                handleNext();
+              }
+            }}
             placeholder="Enter your number"
             className="w-full pl-24 pr-4 py-4 rounded-2xl bg-input border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all text-base"
           />
