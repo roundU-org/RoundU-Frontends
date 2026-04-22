@@ -43,6 +43,16 @@ interface State {
       bankVerified: boolean;
     };
   };
+  // New Flow State
+  isNewUser: boolean;
+  walletBalance: number;
+  onboardingData: {
+    serviceIds: string[];
+    homeType: string;
+    householdSize: string;
+    frequency: string;
+    budget: string;
+  };
 }
 
 type Action =
@@ -65,6 +75,9 @@ type Action =
   | { type: "COMPLETE_REQUEST"; id: string }
   | { type: "UPDATE_REGISTRATION_DRAFT"; patch: Partial<State["providerRegistrationDraft"]> }
   | { type: "UPDATE_KYC"; patch: Partial<State["providerRegistrationDraft"]["kyc"]> }
+  | { type: "UPDATE_ONBOARDING"; patch: Partial<State["onboardingData"]> }
+  | { type: "SET_NEW_USER"; value: boolean }
+  | { type: "UPDATE_WALLET"; amount: number }
   | { type: "LOGOUT" };
 
 const initialState: State = {
@@ -93,6 +106,15 @@ const initialState: State = {
     workingHours: "All day",
     serviceRadius: 5,
     kyc: { aadhaarVerified: false, panVerified: false, bankVerified: false },
+  },
+  isNewUser: true,
+  walletBalance: 0,
+  onboardingData: {
+    serviceIds: [],
+    homeType: "",
+    householdSize: "",
+    frequency: "",
+    budget: "",
   },
 };
 
@@ -182,6 +204,15 @@ function reducer(state: State, action: Action): State {
           kyc: { ...state.providerRegistrationDraft.kyc, ...action.patch },
         },
       };
+    case "UPDATE_ONBOARDING":
+      return {
+        ...state,
+        onboardingData: { ...state.onboardingData, ...action.patch },
+      };
+    case "SET_NEW_USER":
+      return { ...state, isNewUser: action.value };
+    case "UPDATE_WALLET":
+      return { ...state, walletBalance: state.walletBalance + action.amount };
     case "LOGOUT":
       return { ...initialState };
     default:

@@ -49,11 +49,6 @@ const Profile = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
-          <Stat value={String(bookings.length)} label="Bookings" />
-          <Stat value={String(bookings.filter((b) => b.status === "completed").length)} label="Completed" />
-          <Stat value={String(notifications.length)} label="Alerts" />
-        </div>
 
         <div className="bg-card border border-border rounded-2xl shadow-card overflow-hidden">
           <Item icon={History} label="Booking History" onClick={() => navigate("/bookings")} />

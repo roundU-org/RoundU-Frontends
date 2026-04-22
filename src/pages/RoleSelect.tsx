@@ -8,7 +8,7 @@ const RoleSelect = () => {
 
   const select = (role: "customer" | "provider") => {
     dispatch({ type: "SET_ROLE", role });
-    navigate(role === "customer" ? "/location" : "/provider/select-service", { replace: true });
+    navigate(role === "customer" ? "/onboarding" : "/provider/select-service", { replace: true });
   };
 
   return (
@@ -32,14 +32,14 @@ const RoleSelect = () => {
       <div className="flex flex-col gap-4 flex-1">
         <button
           onClick={() => select("customer")}
-          className="group bg-primary rounded-2xl p-6 text-left transition-all duration-300 hover:bg-secondary active:scale-[0.98] animate-fade-in-up shadow-card"
+          className="group bg-primary rounded-2xl p-6 text-left transition-all duration-300 hover:bg-secondary hover:scale-[1.02] active:scale-[0.98] animate-fade-in-up shadow-card hover:shadow-xl hover:shadow-primary/20"
           style={{ animationDelay: "0.2s", opacity: 0 }}
         >
           <div className="flex items-start justify-between">
-            <div className="w-14 h-14 rounded-2xl bg-primary-foreground/10 flex items-center justify-center mb-4">
+            <div className="w-14 h-14 rounded-2xl bg-primary-foreground/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
               <User className="text-primary-foreground" size={28} />
             </div>
-            <ArrowRight className="text-primary-foreground/60 group-hover:text-accent transition-colors" size={20} />
+            <ArrowRight className="text-primary-foreground/60 group-hover:text-accent group-hover:translate-x-1 transition-all" size={20} />
           </div>
           <h3 className="text-xl font-bold text-primary-foreground mb-1">Customer</h3>
           <p className="text-sm text-primary-foreground/70 leading-relaxed">
@@ -49,17 +49,17 @@ const RoleSelect = () => {
 
         <button
           onClick={() => select("provider")}
-          className="group bg-primary rounded-2xl p-6 text-left transition-all duration-300 hover:bg-secondary active:scale-[0.98] animate-fade-in-up shadow-card relative"
+          className="group bg-primary rounded-2xl p-6 text-left transition-all duration-300 hover:bg-secondary hover:scale-[1.02] active:scale-[0.98] animate-fade-in-up shadow-card hover:shadow-xl hover:shadow-primary/20 relative overflow-hidden"
           style={{ animationDelay: "0.35s", opacity: 0 }}
         >
-          <span className="absolute top-4 right-4 text-[10px] font-extrabold px-2 py-1 rounded-md bg-accent text-accent-foreground tracking-wider">
+          <span className="absolute top-4 right-4 text-[10px] font-extrabold px-2 py-1 rounded-md bg-accent text-accent-foreground tracking-wider z-10">
             PRO
           </span>
           <div className="flex items-start justify-between">
-            <div className="w-14 h-14 rounded-2xl bg-primary-foreground/10 flex items-center justify-center mb-4">
+            <div className="w-14 h-14 rounded-2xl bg-primary-foreground/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
               <Wrench className="text-primary-foreground" size={28} />
             </div>
-            <ArrowRight className="text-primary-foreground/60 group-hover:text-accent transition-colors mt-8" size={20} />
+            <ArrowRight className="text-primary-foreground/60 group-hover:text-accent group-hover:translate-x-1 transition-all mt-8" size={20} />
           </div>
           <h3 className="text-xl font-bold text-primary-foreground mb-1">Service Provider</h3>
           <p className="text-sm text-primary-foreground/70 leading-relaxed">

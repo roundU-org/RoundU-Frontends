@@ -35,7 +35,16 @@ const OtpVerify = () => {
     }
     dispatch({ type: "SET_AUTH", value: true });
     toast.success("Verified successfully");
-    navigate("/role", { replace: true });
+    
+    // Mock: If phone is '9999999999' (from social login) consider it returning
+    // Otherwise, new user goes to name collection
+    const isReturning = phone === "9999999999";
+    if (isReturning) {
+      dispatch({ type: "SET_NEW_USER", value: false });
+      navigate("/home", { replace: true });
+    } else {
+      navigate("/onboarding-name", { replace: true });
+    }
   };
 
   return (

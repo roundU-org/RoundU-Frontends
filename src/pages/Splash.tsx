@@ -13,7 +13,7 @@ const Splash = () => {
       } else {
         navigate("/login", { replace: true });
       }
-    }, 1100);
+    }, 2000);
     return () => clearTimeout(t);
   }, [navigate, isAuthenticated, role]);
 

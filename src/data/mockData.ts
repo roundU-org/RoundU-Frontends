@@ -1,7 +1,5 @@
 import {
-  Zap, Droplets, Sparkles, Car, Wrench, PawPrint,
-  Paintbrush, Hammer, Bug, Truck, Wind, ShieldCheck,
-  LucideIcon,
+  Zap, Droplets, Sparkles, Car, User, LucideIcon,
 } from "lucide-react";
 
 export interface Service {
@@ -60,38 +58,45 @@ export interface ProviderRequest {
 
 export const services: Service[] = [
   { 
-    id: "electrician", 
-    label: "Electrician", 
-    icon: Zap, 
-    desc: "Wiring & fixtures",
-    commonProblems: ["Fan repair", "Short circuit", "Switchboard issues", "New wiring", "MCB tripping"],
-    relatedServiceIds: ["ac", "security", "carpenter"]
-  },
-  { 
     id: "plumber", 
     label: "Plumber", 
     icon: Droplets, 
     desc: "Pipes & drainage",
     commonProblems: ["Leaking pipes", "Tap repair", "Washbasin clog", "Water tanker", "Bathroom fittings"],
-    relatedServiceIds: ["cleaning", "pest", "painter"]
+    relatedServiceIds: ["housekeeping", "electrician"]
   },
   { 
-    id: "cleaning", 
-    label: "Cleaning", 
+    id: "electrician", 
+    label: "Electrician", 
+    icon: Zap, 
+    desc: "Wiring & fixtures",
+    commonProblems: ["Fan repair", "Short circuit", "Switchboard issues", "New wiring", "MCB tripping"],
+    relatedServiceIds: ["housekeeping", "plumber"]
+  },
+  { 
+    id: "carwash", 
+    label: "Car Wash", 
+    icon: Car, 
+    desc: "At your doorstep", 
+    commonProblems: ["Exterior wash", "Interior detailing", "Full car spa"],
+    relatedServiceIds: ["drivers", "housekeeping"]
+  },
+  { 
+    id: "drivers", 
+    label: "Acting Drivers", 
+    icon: User, 
+    desc: "Expert chauffeurs", 
+    commonProblems: ["City driving", "Outstation trip", "Pick & drop", "Monthly driver"],
+    relatedServiceIds: ["carwash"]
+  },
+  { 
+    id: "housekeeping", 
+    label: "House Keeping", 
     icon: Sparkles, 
     desc: "Deep & regular",
-    commonProblems: ["Kitchen cleaning", "Bathroom deep clean", "Full home clean", "Sofa cleaning", "Pest control needed"],
-    relatedServiceIds: ["pest", "painter", "carwash"]
+    commonProblems: ["Kitchen cleaning", "Bathroom deep clean", "Full home clean", "Sofa cleaning"],
+    relatedServiceIds: ["plumber", "electrician", "carwash"]
   },
-  { id: "carwash", label: "Car Wash", icon: Car, desc: "At your doorstep", commonProblems: ["Exterior wash", "Interior detailing", "Full car spa"] },
-  { id: "mechanic", label: "Mechanic", icon: Wrench, desc: "Vehicle service", commonProblems: ["Brake issue", "Engine sound", "Oil change", "Battery jumpstart"] },
-  { id: "pet", label: "Pet Care", icon: PawPrint, desc: "Grooming & vet" },
-  { id: "painter", label: "Painter", icon: Paintbrush, desc: "Interior & exterior", commonProblems: ["Wall painting", "Waterproofing", "Texture work"] },
-  { id: "carpenter", label: "Carpenter", icon: Hammer, desc: "Furniture & fittings", commonProblems: ["Broken door", "Hinge repair", "New furniture", "Cupboard fix"] },
-  { id: "pest", label: "Pest Control", icon: Bug, desc: "Home & office", commonProblems: ["Termite treatment", "Cockroach control", "General pest", "Bed bugs"] },
-  { id: "moving", label: "Packers", icon: Truck, desc: "Move & relocate" },
-  { id: "ac", label: "AC Service", icon: Wind, desc: "Install & maintain", commonProblems: ["Gas leak", "AC not cooling", "Service/cleanup", "Dismantling", "Installation"] },
-  { id: "security", label: "Security", icon: ShieldCheck, desc: "CCTV & alarms", commonProblems: ["CCTV setup", "Camera repair", "Video doorbell", "Access control"] },
 ];
 
 export const getServiceById = (id: string) => services.find((s) => s.id === id);
@@ -104,10 +109,10 @@ export interface QuickFix {
 
 export const quickFixes: QuickFix[] = [
   { id: "pipe", label: "Pipe leakage", icon: Droplets },
-  { id: "fan", label: "Fan is noisy", icon: Wind },
   { id: "switch", label: "Switch repair", icon: Zap },
-  { id: "drain", label: "Drain clog", icon: Droplets },
-  { id: "lock", label: "Lock jammed", icon: ShieldCheck },
+  { id: "carwash", label: "Car detailing", icon: Car },
+  { id: "cleaning", label: "Deep cleaning", icon: Sparkles },
+  { id: "driver", label: "Request drive", icon: User },
 ];
 
 export interface PopularTask {
@@ -126,8 +131,8 @@ export const popularTasks: PopularTask[] = [
     serviceId: "electrician",
     category: "ELECTRICAL",
     title: "Smart Lighting Install",
-    description: "Complete setup for 10 rooms",
-    priceLabel: "$150+",
+    description: "Complete setup for all rooms",
+    priceLabel: "₹1500+",
     image: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=400&h=300&fit=crop",
   },
   {
@@ -136,17 +141,17 @@ export const popularTasks: PopularTask[] = [
     category: "PLUMBING",
     title: "Full Bathroom Refit",
     description: "Fixtures, pipes & drainage",
-    priceLabel: "$300+",
+    priceLabel: "₹3000+",
     image: "https://images.unsplash.com/photo-1585128903994-9788298932a4?w=400&h=300&fit=crop",
   },
   {
     id: "pt-3",
-    serviceId: "ac",
-    category: "HVAC",
-    title: "AC Deep Service",
-    description: "Split & window unit servicing",
-    priceLabel: "$80+",
-    image: "https://images.unsplash.com/photo-1631545806609-eceae30b8989?w=400&h=300&fit=crop",
+    serviceId: "housekeeping",
+    category: "HOUSE KEEPING",
+    title: "Deep Kitchen Cleaning",
+    description: "Full sanitization & degreasing",
+    priceLabel: "₹800+",
+    image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=400&h=300&fit=crop",
   },
 ];
 

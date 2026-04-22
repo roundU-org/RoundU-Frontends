@@ -21,75 +21,97 @@ const PendingApproval = () => {
   }, [clicks, navigate]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background items-center justify-center p-6 text-center">
+    <div className="flex flex-col min-h-screen bg-background items-center justify-center p-6 text-center relative overflow-hidden">
+      {/* Premium Background Elements */}
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/5 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
       
-      <div 
-        className="relative mb-8 mt-12 cursor-pointer"
-        onClick={() => setClicks(c => c + 1)}
-      >
-        <div className="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center animate-pulse">
-          <Clock size={48} className="text-accent" />
+      <div className="relative mb-8 mt-12 group">
+        <div className="w-28 h-28 bg-accent/10 rounded-[36px] flex items-center justify-center animate-bounce-subtle">
+          <Clock size={56} className="text-accent" />
         </div>
-        <div className="absolute -top-1 -right-1 w-8 h-8 bg-card rounded-full flex items-center justify-center shadow-sm">
-          <MoreHorizontal size={16} className="text-muted-foreground animate-bounce" />
+        <div className="absolute -top-2 -right-2 w-10 h-10 bg-card border border-border rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
+          <MoreHorizontal size={20} className="text-muted-foreground" />
         </div>
       </div>
 
-      <h1 className="text-3xl font-extrabold text-foreground mb-3 animate-fade-in-up">
-        Under Review
-      </h1>
-      
-      <p className="text-sm text-muted-foreground leading-relaxed max-w-[300px] mb-10 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-        Our team reviews every application within 24-48 hours. We'll send you a push notification when you are approved!
-      </p>
+      <div className="space-y-4 max-w-[320px]">
+        <h1 className="text-3xl font-extrabold text-foreground tracking-tight animate-fade-in">
+          Verification <br /><span className="text-accent">In Progress</span>
+        </h1>
+        
+        <p className="text-sm text-muted-foreground leading-relaxed animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          We're currently reviewing your documents. Our team usually approves profiles within <span className="text-foreground font-bold">24 hours</span>.
+        </p>
+      </div>
 
       {/* Checklist */}
-      <div className="w-full max-w-[320px] bg-card border border-border rounded-2xl p-5 mb-10 animate-fade-in-up shadow-sm text-left" style={{ animationDelay: '0.2s' }}>
-        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Verification Steps</h3>
+      <div className="w-full max-w-[320px] bg-card border border-border rounded-[32px] p-6 my-10 animate-fade-in shadow-xl shadow-accent/5 text-left relative z-10" style={{ animationDelay: '0.2s' }}>
+        <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-5 px-1">Application Status</h3>
         
         <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <CheckCircle2 size={18} className="text-success" />
-            <span className="text-sm font-semibold text-foreground">Aadhaar verified</span>
+          <div className="flex items-center gap-4">
+            <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
+              <CheckCircle2 size={16} className="text-green-500" />
+            </div>
+            <span className="text-sm font-bold text-foreground/80">Identity Verified</span>
           </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle2 size={18} className="text-success" />
-            <span className="text-sm font-semibold text-foreground">PAN verified</span>
+          <div className="flex items-center gap-4">
+            <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
+              <CheckCircle2 size={16} className="text-green-500" />
+            </div>
+            <span className="text-sm font-bold text-foreground/80">Bank Account Linked</span>
           </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle2 size={18} className="text-success" />
-            <span className="text-sm font-semibold text-foreground">Bank account verified</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle2 size={18} className="text-success" />
-            <span className="text-sm font-semibold text-foreground">Video uploaded</span>
+          <div className="flex items-center gap-4">
+            <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
+              <CheckCircle2 size={16} className="text-green-500" />
+            </div>
+            <span className="text-sm font-bold text-foreground/80">Portfolio Review</span>
           </div>
           
-          <div className="h-px bg-border my-2" />
+          <div className="h-px bg-border my-2 mx-1" />
           
-          <div className="flex items-center gap-3">
-            <div className="w-[18px] h-[18px] rounded-full border-2 border-accent border-r-transparent animate-spin flex-shrink-0" />
-            <span className="text-sm font-bold text-accent">Admin review (pending)</span>
+          <div className="flex items-center gap-4 group">
+            <div className="w-6 h-6 rounded-full border-2 border-accent border-r-transparent animate-spin flex-shrink-0" />
+            <span className="text-sm font-extrabold text-accent">Final Admin Approval</span>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col w-full max-w-[320px] gap-3 mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-        <button className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary/10 hover:bg-primary/20 transition-colors">
-          <BellRing size={16} className="text-primary" />
-          <span className="text-sm font-bold text-primary">Notify me when ready</span>
+      <div className="flex flex-col w-full max-w-[320px] gap-3 mb-8 relative z-10">
+        <button 
+          onClick={() => {
+            toast.promise(
+              new Promise((resolve) => setTimeout(resolve, 2000)),
+              {
+                loading: 'Checking global server status...',
+                success: 'All systems green!',
+                error: 'Connection failed',
+              }
+            );
+          }}
+          className="w-full h-14 rounded-2xl bg-accent text-accent-foreground font-black text-sm flex items-center justify-center gap-3 shadow-xl shadow-accent/20 active:scale-[0.98] transition-all"
+        >
+          <BellRing size={20} strokeWidth={2.5} />
+          Check Live Status
         </button>
         
-        <button className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border border-border hover:bg-muted transition-colors">
-          <MessageCircleQuestion size={16} className="text-muted-foreground" />
-          <span className="text-sm font-bold text-foreground">Contact Support</span>
+        {/* DEV ONLY: Simulate Approval */}
+        <button 
+          onClick={() => {
+            toast.success("Hooray! You've been approved.");
+            setTimeout(() => navigate('/provider'), 1500);
+          }}
+          className="w-full h-14 rounded-2xl border-2 border-dashed border-border bg-transparent text-muted-foreground font-bold text-xs flex items-center justify-center gap-2 hover:border-accent/40 hover:text-accent transition-all active:scale-[0.98]"
+        >
+          <CheckCircle2 size={16} />
+          Simulate Admin Approval (Demo Only)
         </button>
       </div>
 
-      <p className="text-xs text-muted-foreground animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-        You can close the app and come back later.
+      <p className="text-[10px] text-muted-foreground/60 font-medium tracking-wide flex items-center gap-2 uppercase">
+        <Clock size={12} /> Pending since 2 hours ago
       </p>
-      
     </div>
   );
 };

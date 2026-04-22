@@ -17,15 +17,15 @@ const Login = () => {
     <div className="min-h-full flex flex-col px-6 py-8 bg-background">
       <button
         onClick={() => navigate(-1)}
-        className="w-10 h-10 rounded-xl bg-input border border-border flex items-center justify-center text-foreground hover:text-primary transition-colors active:scale-95"
+        className="w-10 h-10 rounded-xl bg-input border border-border flex items-center justify-center text-foreground hover:text-primary hover:border-primary/30 transition-all active:scale-90"
       >
         <ArrowLeft size={20} />
       </button>
 
       <div className="mt-10 mb-8 animate-fade-in">
-        <h1 className="text-3xl font-extrabold text-foreground leading-tight">
+        <h1 className="text-3xl font-extrabold text-foreground leading-tight tracking-tight">
           Welcome to<br />
-          <span className="text-primary">Roundu</span>
+          <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Roundu</span>
         </h1>
         <p className="text-muted-foreground mt-3 text-sm">Enter your phone number to continue</p>
       </div>
@@ -58,31 +58,13 @@ const Login = () => {
       <button
         onClick={handleNext}
         disabled={phone.length < 10}
-        className="mt-6 w-full py-4 rounded-2xl font-bold text-base transition-all duration-300 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-secondary animate-fade-in-up flex items-center justify-center gap-2"
+        className="mt-6 w-full py-4 rounded-2xl font-bold text-base transition-all duration-300 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-secondary animate-fade-in-up flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30"
         style={{ animationDelay: "0.3s", opacity: 0 }}
       >
         Next
-        <ArrowRight size={18} />
+        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
       </button>
 
-      <div className="mt-8 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex-1 h-px bg-border" />
-          <span className="text-xs text-muted-foreground">or continue with</span>
-          <div className="flex-1 h-px bg-border" />
-        </div>
-        <div className="flex gap-3">
-          {["Google", "Apple"].map((provider) => (
-            <button
-              key={provider}
-              onClick={() => { setPhone("9999999999"); }}
-              className="flex-1 py-3.5 rounded-2xl bg-input border border-border text-sm font-semibold text-foreground hover:border-primary/30 transition-all active:scale-[0.98]"
-            >
-              {provider}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

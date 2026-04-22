@@ -9,6 +9,8 @@ import MobileLayout from "@/components/MobileLayout";
 import Splash from "@/pages/Splash";
 import Login from "@/pages/Login";
 import OtpVerify from "@/pages/OtpVerify";
+import OnboardingName from "@/pages/OnboardingName";
+import Onboarding from "@/pages/Onboarding";
 import RoleSelect from "@/pages/RoleSelect";
 import Location from "@/pages/Location";
 import Home from "@/pages/Home";
@@ -25,9 +27,13 @@ import Tracking from "@/pages/Tracking";
 import Rating from "@/pages/Rating";
 import Bookings from "@/pages/Bookings";
 import BookingDetail from "@/pages/BookingDetail";
-import Subscription from "@/pages/Subscription";
 import Profile from "@/pages/Profile";
 import Emergency from "@/pages/Emergency";
+import Wallet from "@/pages/Wallet";
+import WalletTopUp from "@/pages/WalletTopUp";
+import WalletHistory from "@/pages/WalletHistory";
+import ReferEarn from "@/pages/ReferEarn";
+import Cancellation from "@/pages/Cancellation";
 import ProviderDashboard from "@/pages/provider/Dashboard";
 import ProviderJob from "@/pages/provider/Job";
 import ProviderEarnings from "@/pages/provider/Earnings";
@@ -55,6 +61,8 @@ const AppRoutes = () => (
       <Route path="/" element={<Splash />} />
       <Route path="/login" element={<Login />} />
       <Route path="/otp" element={<OtpVerify />} />
+      <Route path="/onboarding-name" element={<RequireAuth><OnboardingName /></RequireAuth>} />
+      <Route path="/onboarding" element={<RequireAuth><Onboarding /></RequireAuth>} />
       <Route path="/role" element={<RequireAuth><RoleSelect /></RequireAuth>} />
       <Route path="/location" element={<RequireAuth><Location /></RequireAuth>} />
 
@@ -74,10 +82,13 @@ const AppRoutes = () => (
       <Route path="/rating/:id" element={<RequireAuth><Rating /></RequireAuth>} />
       <Route path="/bookings" element={<RequireAuth><Bookings /></RequireAuth>} />
       <Route path="/bookings/:id" element={<RequireAuth><BookingDetail /></RequireAuth>} />
-      <Route path="/home-care" element={<RequireAuth><Subscription /></RequireAuth>} />
-      <Route path="/subscription" element={<Navigate to="/home-care" replace />} />
       <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
       <Route path="/emergency" element={<RequireAuth><Emergency /></RequireAuth>} />
+      <Route path="/wallet" element={<RequireAuth><Wallet /></RequireAuth>} />
+      <Route path="/wallet/topup" element={<RequireAuth><WalletTopUp /></RequireAuth>} />
+      <Route path="/wallet/history" element={<RequireAuth><WalletHistory /></RequireAuth>} />
+      <Route path="/refer-earn" element={<RequireAuth><ReferEarn /></RequireAuth>} />
+      <Route path="/cancellation" element={<RequireAuth><Cancellation /></RequireAuth>} />
 
       {/* Provider */}
       <Route path="/provider" element={<RequireAuth><ProviderDashboard /></RequireAuth>} />

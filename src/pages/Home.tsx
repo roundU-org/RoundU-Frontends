@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Search, MapPin, Bell, ChevronRight, Gift, Plus, Clock,
-  Menu, X, Home as HomeIcon, CalendarCheck, Heart, User,
-  Settings, HelpCircle, LogOut, Star, ShieldCheck, Smartphone,
+  Search, MapPin, Bell, ChevronRight, Menu, X, Home as HomeIcon, CalendarCheck,
+  Settings, HelpCircle, LogOut, Smartphone, Wallet, Gift, Clock, Star
 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { services, quickFixes, popularTasks } from "@/data/mockData";
@@ -23,12 +22,10 @@ const Home = () => {
   const menuItems = [
     { icon: HomeIcon, label: "Home", path: "/home" },
     { icon: CalendarCheck, label: "My Bookings", path: "/bookings" },
-    { icon: Heart, label: "Home Care Plan", path: "/home-care" },
-    { icon: Star, label: "Favorites", path: "/home" },
-    { icon: ShieldCheck, label: "Emergency", path: "/emergency" },
-    { icon: Smartphone, label: "Refer & Earn", path: "/home" },
+    { icon: Wallet, label: "Wallet", path: "/wallet" },
+    { icon: Smartphone, label: "Refer & Earn", path: "/refer-earn" },
     { icon: Settings, label: "Settings", path: "/profile" },
-    { icon: HelpCircle, label: "Help & Support", path: "/home" },
+    { icon: HelpCircle, label: "Help & Support", path: "/help" },
   ];
 
   return (
@@ -71,23 +68,6 @@ const Home = () => {
               <div>
                 <h3 className="text-white font-bold text-[15px]">{user.name}</h3>
                 <p className="text-white/60 text-[11px] mt-0.5">{user.phone}</p>
-              </div>
-            </div>
-
-            <div className="flex gap-4 mt-4 relative z-10">
-              <div className="text-center">
-                <p className="text-white font-extrabold text-lg">4</p>
-                <p className="text-white/50 text-[9px] uppercase tracking-wider font-bold">Bookings</p>
-              </div>
-              <div className="w-px bg-white/20" />
-              <div className="text-center">
-                <p className="text-white font-extrabold text-lg">4.8</p>
-                <p className="text-white/50 text-[9px] uppercase tracking-wider font-bold">Rating</p>
-              </div>
-              <div className="w-px bg-white/20" />
-              <div className="text-center">
-                <p className="text-amber-400 font-extrabold text-lg">Free</p>
-                <p className="text-white/50 text-[9px] uppercase tracking-wider font-bold">Plan</p>
               </div>
             </div>
           </div>
@@ -146,15 +126,23 @@ const Home = () => {
             </h1>
           </div>
         </div>
-        <button
-          onClick={() => navigate("/profile")}
-          className="w-10 h-10 rounded-full bg-[#F0F2F5] flex items-center justify-center relative active:scale-95 transition-transform"
-        >
-          <Bell size={20} className="text-[#152E4B]" />
-          {notifications.length > 0 && (
-            <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#F59E0B] border-2 border-white" />
-          )}
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/wallet")}
+            className="w-10 h-10 rounded-full bg-[#F0F2F5] flex items-center justify-center relative active:scale-95 transition-transform"
+          >
+            <Wallet size={20} className="text-[#152E4B]" />
+          </button>
+          <button
+            onClick={() => navigate("/profile")}
+            className="w-10 h-10 rounded-full bg-[#F0F2F5] flex items-center justify-center relative active:scale-95 transition-transform"
+          >
+            <Bell size={20} className="text-[#152E4B]" />
+            {notifications.length > 0 && (
+              <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#F59E0B] border-2 border-white" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* ─── Search Bar ─── */}
