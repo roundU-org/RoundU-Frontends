@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Clock } from "lucide-react";
 import { timeSlots } from "@/data/mockData";
 import { useApp } from "@/context/AppContext";
 
 const BookingTime = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { selectedDate, dispatch } = useApp();
   const [time, setTime] = useState<string | null>(null);
 
@@ -27,7 +28,12 @@ const BookingTime = () => {
   const handleNext = () => {
     if (!time) return;
     dispatch({ type: "SELECT_TIME", time });
-    navigate("/booking/notes");
+    
+    if (location.state?.serviceId) {
+      navigate(`/searching-providers/${location.state.serviceId}`);
+    } else {
+      navigate("/booking/notes");
+    }
   };
 
   return (

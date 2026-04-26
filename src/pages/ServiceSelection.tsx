@@ -37,28 +37,19 @@ const ServiceSelection = () => {
 
   const toggleSelection = (problem: string) => {
     setSelectedProblems([problem]);
-  };
-
-  const handleNext = () => {
-    if (selectedProblems.length === 0) {
-      toast.error("Please select at least one issue");
-      return;
-    }
     
+    // Auto-navigate to the next page
     setIsLoading(true);
-    
-    // Simulate API call and transition
     setTimeout(() => {
       setIsLoading(false);
       dispatch({ type: "SELECT_SERVICE", id: service.id });
-      // Pass data to Book Service screen (Page 12)
       navigate(`/book-service/${service.id}`, { 
         state: { 
           serviceId: service.id,
-          issues: selectedProblems 
+          issues: [problem] 
         } 
       });
-    }, 1200);
+    }, 300);
   };
 
   // Mock expansion to closely emulate user's examples
@@ -135,46 +126,6 @@ const ServiceSelection = () => {
           </div>
         )}
 
-        {/* Helper Section */}
-        <div className="bg-white rounded-[20px] p-5 shadow-sm border border-transparent flex items-start gap-3 mt-8">
-           <div className="w-12 h-12 rounded-full bg-[#152E4B]/5 flex items-center justify-center flex-shrink-0">
-               <HelpCircle size={22} className="text-[#A95D06]" strokeWidth={2.5} />
-           </div>
-           <div className="flex-1">
-               <h3 className="text-[15px] font-extrabold text-[#030916]">Not sure what's wrong?</h3>
-               <p className="text-[11px] text-gray-500 mt-1 mb-4 leading-relaxed">Our experts can help you identify the issue</p>
-               <button className="bg-[#152E4B]/5 text-[#152E4B] text-[12px] font-extrabold tracking-wide uppercase px-4 py-2.5 rounded-xl active:scale-95 transition-all">
-                  Get Help
-               </button>
-           </div>
-        </div>
-
-        {/* Trust Bar */}
-        <div className="flex gap-4 items-end justify-between opacity-80 px-2 pt-2">
-            <span className="flex flex-col items-center gap-1 text-[10.5px] font-bold text-gray-500 text-center uppercase tracking-wide"><ShieldCheck size={26} className="text-[#A95D06] mb-1" strokeWidth={1.5}/> Verified Experts</span>
-            <span className="flex flex-col items-center gap-1 text-[10.5px] font-bold text-gray-500 text-center uppercase tracking-wide"><Clock size={26} className="text-[#152E4B] mb-1" strokeWidth={1.5}/> On-time Service</span>
-            <span className="flex flex-col items-center gap-1 text-[10.5px] font-bold text-gray-500 text-center uppercase tracking-wide"><ThumbsUp size={26} className="text-[#F59E0B] mb-1" strokeWidth={1.5}/> 100% Satisfaction</span>
-        </div>
-      </div>
-
-      {/* Sticky Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#EEF2F7] via-[#EEF2F7] to-transparent pt-12 z-10 pointer-events-none">
-        <button
-          onClick={handleNext}
-          className={`w-full pointer-events-auto flex items-center justify-center py-[16px] rounded-[20px] transition-all duration-200 active:scale-[0.98] shadow-sm ${
-            selectedProblems.length > 0 && !isLoading
-              ? "bg-[#152E4B] text-white hover:bg-[#1C3D63]" 
-              : "bg-gray-200 text-gray-400 cursor-pointer shadow-none"
-          }`}
-        >
-          {isLoading ? (
-            <span className="flex items-center gap-2 font-extrabold text-[15.5px]">
-              <Loader2 className="animate-spin" size={20} /> Finding...
-            </span>
-          ) : (
-            <span className="font-extrabold text-[15.5px]">Find Specialists</span>
-          )}
-        </button>
       </div>
     </div>
   );

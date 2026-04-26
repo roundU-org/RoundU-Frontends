@@ -16,7 +16,7 @@ const BookService = () => {
   const navigate = useNavigate();
   const service = getServiceById(serviceId);
   const [desc, setDesc] = useState("");
-  const [scheduleType, setScheduleType] = useState<"now" | "later">("now");
+  const [scheduleType, setScheduleType] = useState<"now" | "later" | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [hasVoiceNote, setHasVoiceNote] = useState(false);
 
@@ -31,11 +31,23 @@ const BookService = () => {
     }
   };
   
-  const handleFindProviders = () => {
+  const handleScheduleSelect = (type: "now" | "later") => {
     if (!desc) {
-      toast.error("Please describe your issue");
+      toast.error("Please describe your issue first");
       return;
     }
+    setScheduleType(type);
+    
+    if (type === "later") {
+      navigate("/booking/date", {
+        state: {
+          serviceId,
+          desc
+        }
+      });
+      return;
+    }
+    
     toast.info("Finding providers near you...");
     navigate(`/searching-providers/${serviceId}`);
   };
@@ -57,20 +69,7 @@ const BookService = () => {
 
       <div className="flex-1 overflow-y-auto px-5 pt-5 pb-6 space-y-6">
         
-        {/* Chips */}
-        <div>
-           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none -mx-5 px-5">
-             {suggestions.map(s => (
-               <button 
-                key={s} 
-                onClick={() => setDesc(s)}
-                className="whitespace-nowrap px-4 py-2 bg-white border border-gray-100 text-gray-700 text-[13px] font-bold rounded-[12px] shadow-[0_2px_8px_rgba(0,0,0,0.02)] active:scale-95 transition-all"
-               >
-                 {s}
-               </button>
-             ))}
-           </div>
-        </div>
+
 
         {/* Description */}
         <div className="bg-white rounded-[20px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-gray-100">
@@ -144,26 +143,20 @@ const BookService = () => {
            <h2 className="text-[14px] font-extrabold text-gray-900 mb-3 px-1 block">Schedule Service</h2>
            <div className="flex gap-3">
               <button 
-                onClick={() => setScheduleType("now")}
-                className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-[16px] border transition-all ${scheduleType === 'now' ? 'bg-blue-600 border-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.25)]' : 'bg-white border-gray-200 text-gray-600 shadow-sm'}`}
+                onClick={() => handleScheduleSelect("now")}
+                className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-[16px] border-2 transition-all ${scheduleType === 'now' ? 'bg-blue-600 border-gray-900 text-white shadow-[0_4px_14px_rgba(37,99,235,0.25)]' : 'bg-white border-gray-100 text-gray-600 shadow-sm hover:border-gray-200'}`}
               >
                 <Zap size={18} />
                 <span className="font-bold text-[14px]">Quick Fix</span>
               </button>
               <button 
-                onClick={() => setScheduleType("later")}
-                className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-[16px] border transition-all ${scheduleType === 'later' ? 'bg-blue-600 border-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.25)]' : 'bg-white border-gray-200 text-gray-600 shadow-sm'}`}
+                onClick={() => handleScheduleSelect("later")}
+                className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-[16px] border-2 transition-all ${scheduleType === 'later' ? 'bg-blue-600 border-gray-900 text-white shadow-[0_4px_14px_rgba(37,99,235,0.25)]' : 'bg-white border-gray-100 text-gray-600 shadow-sm hover:border-gray-200'}`}
               >
                 <Clock size={18} />
                 <span className="font-bold text-[14px]">Schedule</span>
               </button>
            </div>
-
-           {scheduleType === "later" && (
-             <div className="mt-4 bg-white rounded-[20px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-gray-100 flex items-center justify-center border-dashed">
-                <p className="text-[13px] font-bold text-gray-400">Date and time picker will appear here</p>
-             </div>
-           )}
         </div>
 
 
@@ -175,21 +168,6 @@ const BookService = () => {
 
       </div>
 
-      <div className="p-5 bg-white border-t border-gray-100 drop-shadow-[0_-4px_16px_rgba(0,0,0,0.02)]">
-         <div className="flex items-center justify-between mb-4">
-            <span className="text-[14px] font-extrabold text-gray-800">Estimated Price</span>
-            <div className="text-right flex flex-col items-end">
-               <span className="text-[18px] font-extrabold text-gray-900 leading-none">₹300 – ₹500</span>
-               <span className="text-[10px] text-gray-400 font-bold mt-1">Final price varies after inspection</span>
-            </div>
-         </div>
-         <button 
-           onClick={handleFindProviders}
-           className="w-full py-4 rounded-[16px] font-bold text-[15.5px] bg-[#152E4B] text-white flex justify-center items-center gap-2 hover:bg-[#1C3D63] active:scale-[0.98] transition-all shadow-[0_4px_14px_rgba(21,46,75,0.2)]"
-         >
-            Find Providers
-         </button>
-      </div>
     </div>
   );
 };

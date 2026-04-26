@@ -6,7 +6,7 @@ import { useApp } from "@/context/AppContext";
 const ProviderDetail = () => {
   const { id = "" } = useParams();
   const navigate = useNavigate();
-  const { dispatch } = useApp();
+  const { selectedDate, selectedTime, dispatch } = useApp();
   const provider = getProviderById(id);
   if (!provider) {
     return (
@@ -21,23 +21,12 @@ const ProviderDetail = () => {
   const handleBook = () => {
     dispatch({ type: "SELECT_PROVIDER", id: provider.id });
     dispatch({ type: "SELECT_SERVICE", id: provider.serviceId });
-    // In a real app, you would make an API call here with data from BookService. 
-    // We create a temp mock booking ID and push it to context.
-    const tempId = `b_${Math.random().toString(36).substr(2, 9)}`;
-    dispatch({ 
-      type: "ADD_BOOKING", 
-      booking: {
-        id: tempId,
-        serviceId: provider.serviceId,
-        providerId: provider.id,
-        date: "Oct 24, 2026",
-        time: "10:00 AM",
-        status: "confirmed",
-        price: 499
-      }
-    });
+    
+    // Set default date/time for Quick Fix if they weren't set in the schedule flow
+    if (!selectedDate) dispatch({ type: "SELECT_DATE", date: new Date().toISOString().slice(0, 10) });
+    if (!selectedTime) dispatch({ type: "SELECT_TIME", time: "ASAP" });
 
-    navigate(`/booking/success/${tempId}`);
+    navigate("/booking/notes");
   };
 
   return (

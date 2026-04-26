@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 
 const BookingDate = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { selectedProvider, dispatch } = useApp();
   const [month, setMonth] = useState(new Date());
   const [selected, setSelected] = useState<Date | null>(null);
@@ -19,7 +20,7 @@ const BookingDate = () => {
     return () => window.removeEventListener("keydown", handleKey);
   }, [selected]);
 
-  if (!selectedProvider) {
+  if (!selectedProvider && !location.state?.serviceId) {
     navigate("/home", { replace: true });
     return null;
   }
@@ -37,7 +38,7 @@ const BookingDate = () => {
   const handleNext = () => {
     if (!selected) return;
     dispatch({ type: "SELECT_DATE", date: selected.toISOString().slice(0, 10) });
-    navigate("/booking/time");
+    navigate("/booking/time", { state: location.state });
   };
 
   return (
