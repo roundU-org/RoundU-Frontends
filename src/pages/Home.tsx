@@ -123,7 +123,7 @@ const Home = () => {
             </h1>
             <p className="text-[11px] text-gray-400 font-medium flex items-center gap-1 mt-0.5">
               <MapPin size={11} className="text-[#152E4B]" /> {user.address}
-            </p
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -141,7 +141,7 @@ const Home = () => {
             {notifications.length > 0 && (
               <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#F59E0B] border-2 border-white" />
             )}
-          </button
+          </button>
         </div>
       </div>
 
