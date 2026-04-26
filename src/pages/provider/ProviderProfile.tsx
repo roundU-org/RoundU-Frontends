@@ -1,14 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, Briefcase, Wallet, LogOut, ChevronRight } from "lucide-react";
+import { ArrowLeft, Star, Briefcase, Wallet, LogOut, ChevronRight, User, SwitchCamera, MapPin, Clock, Image as ImageIcon, FileText, Settings } from "lucide-react";
 import { useApp } from "@/context/AppContext";
+import ProviderBottomNav from "@/components/ProviderBottomNav";
+import { toast } from "sonner";
 
 const ProviderProfile = () => {
   const navigate = useNavigate();
-  const { user, dispatch, completedJobs } = useApp();
+  const { user, dispatch, completedJobs, providerStats, isOnline } = useApp();
 
   const logout = () => {
     dispatch({ type: "LOGOUT" });
     navigate("/login", { replace: true });
+  };
+
+  const switchToCustomer = () => {
+    dispatch({ type: "SET_ROLE", role: "customer" });
+    navigate("/home", { replace: true });
+    toast("Switched to Customer Mode");
   };
 
   return (
@@ -22,35 +30,91 @@ const ProviderProfile = () => {
 
       <div className="px-5 flex-1 space-y-4">
         <div className="bg-card border border-border rounded-2xl p-5 shadow-card text-center">
-          <div className="w-20 h-20 rounded-2xl bg-primary mx-auto flex items-center justify-center text-primary-foreground text-xl font-extrabold">
+          <div className="w-20 h-20 rounded-2xl bg-primary mx-auto flex items-center justify-center text-primary-foreground text-xl font-extrabold relative">
             {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+            <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-card ${isOnline ? 'bg-success' : 'bg-muted-foreground'}`} />
           </div>
           <h2 className="text-base font-bold text-foreground mt-3">{user.name}</h2>
           <p className="text-xs text-muted-foreground">+91 {user.phone || "—"}</p>
-          <div className="flex items-center justify-center gap-1 mt-2">
-            <Star size={14} className="text-accent fill-accent" />
-            <span className="text-sm font-bold text-foreground">4.8</span>
-            <span className="text-xs text-muted-foreground">({completedJobs.length} jobs)</span>
+
+          <div className="grid grid-cols-3 divide-x divide-border mt-5 border-t border-border pt-4">
+            <div>
+              <p className="text-lg font-extrabold text-foreground flex items-center justify-center gap-1">
+                {providerStats.rating} <Star size={14} className="text-accent fill-accent" />
+              </p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mt-1">Rating</p>
+            </div>
+            <div>
+              <p className="text-lg font-extrabold text-foreground">{completedJobs.length}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mt-1">Jobs</p>
+            </div>
+            <div>
+              <p className="text-lg font-extrabold text-foreground">{providerStats.responseRate}%</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mt-1">Response</p>
+            </div>
           </div>
         </div>
 
         <div className="bg-card border border-border rounded-2xl shadow-card overflow-hidden">
-          <Item icon={Briefcase} label="My Jobs" onClick={() => navigate("/provider")} />
-          <Item icon={Wallet} label="Earnings" onClick={() => navigate("/provider/earnings")} last />
+          <Item icon={User} label="Edit Profile" onClick={() => toast("Edit Profile coming soon")} />
+          <Item icon={ImageIcon} label="My Portfolio" onClick={() => navigate("/provider/portfolio")} />
+          <Item icon={FileText} label="Documents & KYC" onClick={() => navigate("/provider/documents")} />
+          <Item icon={Briefcase} label="My Jobs" onClick={() => navigate("/provider/jobs")} />
+          <Item icon={Wallet} label="Earnings" onClick={() => navigate("/provider/earnings")} />
+          <Item icon={Settings} label="Location Settings" onClick={() => navigate("/provider/location-settings")} last />
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl shadow-card overflow-hidden">
+          <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600"><Clock size={16} /></div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Working Hours</p>
+                <p className="text-[10px] text-muted-foreground">9:00 AM - 6:00 PM</p>
+              </div>
+            </div>
+            <button className="text-xs text-primary font-bold">Edit</button>
+          </div>
+          <div className="px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600"><MapPin size={16} /></div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Service Radius</p>
+                <p className="text-[10px] text-muted-foreground">Up to 15 km</p>
+              </div>
+            </div>
+            <button className="text-xs text-primary font-bold">Edit</button>
+          </div>
         </div>
 
         <button
+          onClick={switchToCustomer}
+          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-2 active:scale-[0.98] shadow-card"
+        >
+          <SwitchCamera size={18} /> Switch to Customer Mode
+        </button>
+
+        <button
           onClick={logout}
-          className="w-full py-3.5 rounded-2xl bg-card border border-destructive/30 text-destructive font-bold text-sm flex items-center justify-center gap-2 active:scale-[0.98]"
+          className="w-full py-3.5 rounded-2xl bg-transparent text-muted-foreground font-bold text-sm flex items-center justify-center gap-2 active:scale-[0.98] mt-2"
         >
           <LogOut size={16} /> Log out
         </button>
       </div>
+
+      <ProviderBottomNav />
     </div>
   );
 };
 
-const Item = ({ icon: Icon, label, onClick, last }: any) => (
+interface ItemProps {
+  icon: React.ElementType;
+  label: string;
+  onClick: () => void;
+  last?: boolean;
+}
+
+const Item = ({ icon: Icon, label, onClick, last }: ItemProps) => (
   <button onClick={onClick} className={`w-full px-4 py-3.5 flex items-center gap-3 active:bg-input transition-colors ${last ? "" : "border-b border-border"}`}>
     <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
       <Icon size={16} className="text-primary" />

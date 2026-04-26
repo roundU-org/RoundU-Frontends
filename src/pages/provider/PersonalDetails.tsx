@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Camera, MapPin } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -30,7 +30,17 @@ const PersonalDetails = () => {
   const [city, setCity] = useState("Bangalore");
   const [pincode, setPincode] = useState("");
 
-  const handleNext = () => {
+  const [profilePhotoUri, setProfilePhotoUri] = useState<string | null>(null);
+  const profilePhotoRef = useRef<HTMLInputElement>(null);
+
+  const handleProfilePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePhotoUri(URL.createObjectURL(file));
+    }
+  };
+
+  const handleNext = useCallback(() => {
     // Save draft items needed
     dispatch({
       type: "UPDATE_REGISTRATION_DRAFT",
@@ -44,9 +54,8 @@ const PersonalDetails = () => {
     });
     // In real app, we'd dispatch user updates too
     navigate("/provider/digilocker-kyc");
-  };
-
-  const canProceed = dob && gender && address && city && pincode && bio.length > 5;
+  }, [bio, dispatch, expIndex, navigate, radiusIndex, workingHours]);
+  const canProceed = dob && gender && address && city && pincode.length === 6;
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -56,7 +65,10 @@ const PersonalDetails = () => {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [canProceed]);
+  }, [canProceed, handleNext]);
+
+  const maxDob = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0];
+  const minDob = new Date(new Date().setFullYear(new Date().getFullYear() - 60)).toISOString().split('T')[0];
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -73,14 +85,28 @@ const PersonalDetails = () => {
         <section className="flex flex-col flex-1 items-center animate-fade-in">
           <div className="relative">
             <div className="w-24 h-24 rounded-full bg-muted border-4 border-card shadow-sm flex items-center justify-center overflow-hidden">
-              <span className="text-3xl font-bold text-muted-foreground">{user.name.charAt(0)}</span>
+              {profilePhotoUri ? (
+                <img src={profilePhotoUri} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-3xl font-bold text-muted-foreground">{user.name.charAt(0)}</span>
+              )}
             </div>
-            <button className="absolute bottom-0 right-0 p-2 bg-primary text-primary-foreground rounded-full shadow-md active:scale-95 transition-transform">
+            <button 
+              onClick={() => profilePhotoRef.current?.click()}
+              className="absolute bottom-0 right-0 p-2 bg-primary text-primary-foreground rounded-full shadow-md active:scale-95 transition-transform"
+            >
               <Camera size={16} />
             </button>
+            <input 
+              type="file" 
+              accept="image/*" 
+              ref={profilePhotoRef} 
+              onChange={handleProfilePhotoUpload} 
+              className="hidden" 
+            />
           </div>
           <p className="mt-3 font-bold text-foreground text-lg">{user.name}</p>
-          <p className="text-xs text-muted-foreground">{user.phone} · {user.email}</p>
+          <p className="text-xs text-muted-foreground">{user.phone}</p>
         </section>
 
         {/* Basic Info */}
@@ -92,6 +118,8 @@ const PersonalDetails = () => {
               <input 
                 type="date" 
                 value={dob}
+                min={minDob}
+                max={maxDob}
                 onChange={(e) => setDob(e.target.value)}
                 className="w-full bg-card border border-border rounded-xl p-3 text-sm focus:outline-none focus:border-primary text-foreground"
               />
@@ -132,14 +160,26 @@ const PersonalDetails = () => {
               type="text" 
               placeholder="City / District" 
               value={city}
-              onChange={(e) => setCity(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (/^[a-zA-Z\s]*$/.test(val)) {
+                  setCity(val);
+                }
+              }}
               className="w-full bg-card border border-border rounded-xl p-3 text-sm focus:outline-none focus:border-primary text-foreground"
             />
             <input 
-              type="number" 
+              type="text" 
+              inputMode="numeric"
+              maxLength={6}
               placeholder="PIN Code" 
               value={pincode}
-              onChange={(e) => setPincode(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (/^\d*$/.test(val) && val.length <= 6) {
+                  setPincode(val);
+                }
+              }}
               className="w-full bg-card border border-border rounded-xl p-3 text-sm focus:outline-none focus:border-primary text-foreground"
             />
           </div>
@@ -213,7 +253,7 @@ const PersonalDetails = () => {
         {/* Bio */}
         <section className="space-y-4 animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-extrabold text-foreground uppercase tracking-wider">About You</h3>
+            <h3 className="text-sm font-extrabold text-foreground uppercase tracking-wider">About You (Optional)</h3>
             <span className={`text-xs ${bio.length > 200 ? 'text-destructive font-bold' : 'text-muted-foreground'}`}>
               {bio.length}/200
             </span>
