@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Mic, Square, Play, Trash2, ImagePlus, X } from "lucide-react";
 import { useApp } from "@/context/AppContext";
@@ -65,10 +65,10 @@ const BookingNotes = () => {
     setTimer(0);
   };
 
-  if (!selectedProvider || !selectedDate || !selectedTime) {
-    navigate("/booking/date", { replace: true });
-    return null;
-  }
+  const handleNext = useCallback(() => {
+    dispatch({ type: "SET_NOTES", notes });
+    navigate("/booking/payment");
+  }, [dispatch, navigate, notes]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -79,12 +79,12 @@ const BookingNotes = () => {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [notes]);
+  }, [handleNext, notes]);
 
-  const handleNext = () => {
-    dispatch({ type: "SET_NOTES", notes });
-    navigate("/booking/payment");
-  };
+  if (!selectedProvider || !selectedDate || !selectedTime) {
+    navigate("/booking/date", { replace: true });
+    return null;
+  }
 
   return (
     <div className="min-h-full flex flex-col bg-background pb-24">
