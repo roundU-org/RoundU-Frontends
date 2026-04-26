@@ -53,11 +53,6 @@ interface State {
     frequency: string;
     budget: string;
   };
-  isOnline: boolean;
-  providerStats: {
-    rating: number;
-    responseRate: number;
-  };
 }
 
 type Action =
@@ -83,8 +78,6 @@ type Action =
   | { type: "UPDATE_ONBOARDING"; patch: Partial<State["onboardingData"]> }
   | { type: "SET_NEW_USER"; value: boolean }
   | { type: "UPDATE_WALLET"; amount: number }
-  | { type: "SET_ONLINE"; value: boolean }
-  | { type: "UPDATE_STATS"; patch: Partial<State["providerStats"]> }
   | { type: "LOGOUT" };
 
 const initialState: State = {
@@ -122,11 +115,6 @@ const initialState: State = {
     householdSize: "",
     frequency: "",
     budget: "",
-  },
-  isOnline: true,
-  providerStats: {
-    rating: 4.9,
-    responseRate: 98,
   },
 };
 
@@ -225,10 +213,6 @@ function reducer(state: State, action: Action): State {
       return { ...state, isNewUser: action.value };
     case "UPDATE_WALLET":
       return { ...state, walletBalance: state.walletBalance + action.amount };
-    case "SET_ONLINE":
-      return { ...state, isOnline: action.value };
-    case "UPDATE_STATS":
-      return { ...state, providerStats: { ...state.providerStats, ...action.patch } };
     case "LOGOUT":
       return { ...initialState };
     default:

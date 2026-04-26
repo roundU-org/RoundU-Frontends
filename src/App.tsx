@@ -45,15 +45,10 @@ import ManageSubscriptions from "@/pages/ManageSubscriptions";
 import Subscription from "@/pages/Subscription";
 import Cancellation from "@/pages/Cancellation";
 import ProviderDashboard from "@/pages/provider/Dashboard";
-import ProviderJobs from "@/pages/provider/Jobs";
 import ProviderJob from "@/pages/provider/Job";
-import ProviderServiceReport from "@/pages/provider/ServiceReport";
 import ProviderEarnings from "@/pages/provider/Earnings";
 import ProviderProfile from "@/pages/provider/ProviderProfile";
 import ProviderVideoPortfolio from "@/pages/provider/VideoPortfolio";
-import ProviderPortfolio from "@/pages/provider/Portfolio";
-import ProviderDocuments from "@/pages/provider/Documents";
-import ProviderLocationSettings from "@/pages/provider/GPSMonitor";
 import SelectService from "@/pages/provider/SelectService";
 import PersonalDetails from "@/pages/provider/PersonalDetails";
 import DigiLockerKYC from "@/pages/provider/DigiLockerKYC";
@@ -117,18 +112,13 @@ const AppRoutes = () => (
 
       {/* Provider */}
       <Route path="/provider" element={<RequireAuth><ProviderDashboard /></RequireAuth>} />
-      <Route path="/provider/jobs" element={<RequireAuth><ProviderJobs /></RequireAuth>} />
       <Route path="/provider/select-service" element={<RequireAuth><SelectService /></RequireAuth>} />
       <Route path="/provider/personal-details" element={<RequireAuth><PersonalDetails /></RequireAuth>} />
       <Route path="/provider/digilocker-kyc" element={<RequireAuth><DigiLockerKYC /></RequireAuth>} />
       <Route path="/provider/video-portfolio" element={<RequireAuth><ProviderVideoPortfolio /></RequireAuth>} />
       <Route path="/provider/gps-consent" element={<RequireAuth><GpsConsent /></RequireAuth>} />
       <Route path="/provider/pending-approval" element={<RequireAuth><PendingApproval /></RequireAuth>} />
-      <Route path="/provider/portfolio" element={<RequireAuth><ProviderPortfolio /></RequireAuth>} />
-      <Route path="/provider/documents" element={<RequireAuth><ProviderDocuments /></RequireAuth>} />
-      <Route path="/provider/location-settings" element={<RequireAuth><ProviderLocationSettings /></RequireAuth>} />
       <Route path="/provider/job/:id" element={<RequireAuth><ProviderJob /></RequireAuth>} />
-      <Route path="/provider/job/:id/report" element={<RequireAuth><ProviderServiceReport /></RequireAuth>} />
       <Route path="/provider/earnings" element={<RequireAuth><ProviderEarnings /></RequireAuth>} />
       <Route path="/provider/profile" element={<RequireAuth><ProviderProfile /></RequireAuth>} />
 

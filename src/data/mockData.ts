@@ -1,9 +1,5 @@
 import {
-  Zap, Droplets, Sparkles, Car, User, LucideIcon, SprayCan,
-  Paintbrush, Hammer, AirVent, Bug, Scissors, Flower2, Monitor,
-  Refrigerator, Wallpaper, Lock, Smartphone, Music,
-  ChefHat, GraduationCap, Dog, HeartPulse, Truck, Plane,
-  Dumbbell, Camera as CameraIcon, Tv, Wind, Trash2, Home
+  Zap, Droplets, Sparkles, Car, User, LucideIcon, SprayCan
 } from "lucide-react";
 
 export interface Service {
@@ -56,94 +52,51 @@ export interface ProviderRequest {
   date: string;
   time: string;
   price: number;
-  status: "pending" | "accepted" | "on_the_way" | "arrived" | "quote_set" | "in_progress" | "completed" | "rejected";
+  status: "pending" | "accepted" | "rejected" | "in_progress" | "completed";
   notes?: string;
-  distanceKm?: number;
-  customerRating?: number;
-  photos?: string[];
-  video?: string;
-  voiceNote?: string;
-  quote?: number;
-}
-
-export interface ServiceReport {
-  id: string;
-  jobId: string;
-  rootCause: string;
-  severity: number;
-  description: string;
-  followUp: string;
-  beforePhoto?: string;
-  afterPhoto?: string;
-  submittedAt: number;
 }
 
 export const services: Service[] = [
-  {
-    id: "plumber",
-    label: "Plumber",
-    icon: Droplets,
+  { 
+    id: "plumber", 
+    label: "Plumber", 
+    icon: Droplets, 
     desc: "Pipes & drainage",
     commonProblems: ["Leaking pipes", "Tap repair", "Washbasin clog", "Water tanker", "Bathroom fittings"],
     relatedServiceIds: ["housekeeping", "electrician"]
   },
-  {
-    id: "electrician",
-    label: "Electrician",
-    icon: Zap,
+  { 
+    id: "electrician", 
+    label: "Electrician", 
+    icon: Zap, 
     desc: "Wiring & fixtures",
     commonProblems: ["Fan repair", "Short circuit", "Switchboard issues", "New wiring", "MCB tripping"],
     relatedServiceIds: ["housekeeping", "plumber"]
   },
-  {
-    id: "carwash",
-    label: "Car Wash",
-    icon: Car,
-    desc: "At your doorstep",
+  { 
+    id: "carwash", 
+    label: "Car Wash", 
+    icon: Car, 
+    desc: "At your doorstep", 
     commonProblems: ["Exterior wash", "Interior detailing", "Full car spa"],
     relatedServiceIds: ["drivers", "housekeeping"]
   },
-  {
-    id: "drivers",
-    label: "Acting Drivers",
-    icon: User,
-    desc: "Expert chauffeurs",
+  { 
+    id: "drivers", 
+    label: "Acting Drivers", 
+    icon: User, 
+    desc: "Expert chauffeurs", 
     commonProblems: ["City driving", "Outstation trip", "Pick & drop", "Monthly driver"],
     relatedServiceIds: ["carwash"]
   },
-  {
-    id: "housekeeping",
-    label: "House Keeping",
-    icon: SprayCan,
+  { 
+    id: "housekeeping", 
+    label: "House Keeping", 
+    icon: SprayCan, 
     desc: "Deep & regular",
     commonProblems: ["Kitchen cleaning", "Bathroom deep clean", "Full home clean", "Sofa cleaning"],
     relatedServiceIds: ["plumber", "electrician", "carwash"]
   },
-  { id: "painter", label: "Painter", icon: Paintbrush, desc: "Interior & exterior" },
-  { id: "carpenter", label: "Carpenter", icon: Hammer, desc: "Furniture & repairs" },
-  { id: "acrepair", label: "AC Repair", icon: AirVent, desc: "Service & install" },
-  { id: "pestcontrol", label: "Pest Control", icon: Bug, desc: "Termites & bugs" },
-  { id: "salon", label: "Salon", icon: Scissors, desc: "Hair & grooming" },
-  { id: "gardener", label: "Gardener", icon: Flower2, desc: "Lawn & plants" },
-  { id: "tvrepair", label: "TV Repair", icon: Tv, desc: "Display & sound" },
-  { id: "fridgerepair", label: "Fridge Repair", icon: Refrigerator, desc: "Cooling issues" },
-  { id: "mason", label: "Mason", icon: Wallpaper, desc: "Bricks & cement" },
-  { id: "locksmith", label: "Locksmith", icon: Lock, desc: "Keys & locks" },
-  { id: "mobile", label: "Mobile Repair", icon: Smartphone, desc: "Screen & battery" },
-  { id: "photographer", label: "Photographer", icon: CameraIcon, desc: "Events & portraits" },
-  { id: "musician", label: "Musician", icon: Music, desc: "Tutor & events" },
-  { id: "chef", label: "Chef", icon: ChefHat, desc: "At home cooking" },
-  { id: "tutor", label: "Tutor", icon: GraduationCap, desc: "School & college" },
-  { id: "petcare", label: "Pet Care", icon: Dog, desc: "Grooming & walking" },
-  { id: "physio", label: "Physio", icon: HeartPulse, desc: "Home therapy" },
-  { id: "packers", label: "Packers", icon: Truck, desc: "Home shifting" },
-  { id: "travel", label: "Travel Agent", icon: Plane, desc: "Booking & visa" },
-  { id: "fitness", label: "Fitness Coach", icon: Dumbbell, desc: "Personal training" },
-  { id: "ro", label: "RO Repair", icon: Droplets, desc: "Water purifier" },
-  { id: "washingmachine", label: "Washing Machine", icon: Wind, desc: "Repair & service" },
-  { id: "junk", label: "Junk Removal", icon: Trash2, desc: "Clear & dispose" },
-  { id: "interior", label: "Interior Design", icon: Home, desc: "Consult & decor" },
-  { id: "event", label: "Event Planner", icon: Sparkles, desc: "Weddings & parties" },
 ];
 
 export const getServiceById = (id: string) => services.find((s) => s.id === id);
@@ -233,10 +186,6 @@ export const initialProviderRequests: ProviderRequest[] = [
     price: 299,
     status: "pending",
     notes: "Fan installation needed.",
-    distanceKm: 2.3,
-    customerRating: 4.8,
-    photos: ["https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=200&h=200&fit=crop"],
-    video: "https://example.com/video.mp4",
   },
   {
     id: "req-2",
@@ -248,49 +197,6 @@ export const initialProviderRequests: ProviderRequest[] = [
     price: 349,
     status: "pending",
     notes: "Wiring inspection.",
-    distanceKm: 4.1,
-    customerRating: 4.5,
-    voiceNote: "https://example.com/audio.mp3",
-  },
-  {
-    id: "req-3",
-    customerName: "Sanjay Gupta",
-    serviceId: "plumber",
-    address: "BTM Layout, 2nd Stage",
-    date: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
-    time: "09:00 AM",
-    price: 499,
-    status: "pending",
-    notes: "Kitchen sink leakage.",
-    distanceKm: 1.5,
-    customerRating: 4.9,
-    photos: ["https://images.unsplash.com/photo-1585703866243-e6824a61288b?w=200&h=200&fit=crop"],
-  },
-  {
-    id: "req-4",
-    customerName: "Meera Nair",
-    serviceId: "housekeeping",
-    address: "Prestige Shantiniketan, Whitefield",
-    date: new Date(Date.now() + 86400000 * 2).toISOString().slice(0, 10),
-    time: "11:30 AM",
-    price: 899,
-    status: "pending",
-    notes: "Deep cleaning for 2BHK.",
-    distanceKm: 8.2,
-    customerRating: 4.7,
-  },
-  {
-    id: "req-5",
-    customerName: "Rahul Dravid",
-    serviceId: "salon",
-    address: "Lavelle Road, Bangalore",
-    date: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
-    time: "5:00 PM",
-    price: 599,
-    status: "pending",
-    notes: "Haircut and beard trim.",
-    distanceKm: 3.8,
-    customerRating: 5.0,
   },
 ];
 

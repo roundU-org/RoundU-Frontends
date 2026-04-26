@@ -20,33 +20,18 @@ const PendingApproval = () => {
     }
   }, [clicks, navigate]);
 
-  const completionPercent = 85; // Mock percentage based on steps done
-
   return (
     <div className="flex flex-col min-h-screen bg-background items-center justify-center p-6 text-center relative overflow-hidden">
       {/* Premium Background Elements */}
       <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/5 rounded-full blur-3xl animate-pulse" />
       <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
       
-      <div className="w-full max-w-[320px] mb-8 animate-fade-in">
-        <div className="flex justify-between items-end mb-2">
-          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Profile Status</span>
-          <span className="text-sm font-black text-primary">{completionPercent}%</span>
+      <div className="relative mb-8 mt-12 group">
+        <div className="w-28 h-28 bg-accent/10 rounded-[36px] flex items-center justify-center animate-bounce-subtle">
+          <Clock size={56} className="text-accent" />
         </div>
-        <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-          <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: `${completionPercent}%` }} />
-        </div>
-      </div>
-
-      <div className="relative mb-6 group">
-        <div 
-          onClick={() => setClicks(c => c + 1)}
-          className="w-24 h-24 bg-primary/10 rounded-[32px] flex items-center justify-center animate-bounce-subtle cursor-pointer active:scale-95 transition-transform"
-        >
-          <Clock size={48} className="text-primary" />
-        </div>
-        <div className="absolute -top-1 -right-1 w-8 h-8 bg-card border border-border rounded-xl flex items-center justify-center shadow-lg animate-pulse">
-          <MoreHorizontal size={16} className="text-muted-foreground" />
+        <div className="absolute -top-2 -right-2 w-10 h-10 bg-card border border-border rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
+          <MoreHorizontal size={20} className="text-muted-foreground" />
         </div>
       </div>
 
@@ -66,14 +51,14 @@ const PendingApproval = () => {
         
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <div className={`w-6 h-6 rounded-full ${kyc.aadhaarVerified && kyc.panVerified ? 'bg-green-500/10' : 'bg-orange-500/10'} flex items-center justify-center`}>
-              {kyc.aadhaarVerified && kyc.panVerified ? <CheckCircle2 size={16} className="text-green-500" /> : <Clock size={16} className="text-orange-500" />}
+            <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
+              <CheckCircle2 size={16} className="text-green-500" />
             </div>
             <span className="text-sm font-bold text-foreground/80">Identity Verified</span>
           </div>
           <div className="flex items-center gap-4">
-            <div className={`w-6 h-6 rounded-full ${kyc.bankVerified ? 'bg-green-500/10' : 'bg-orange-500/10'} flex items-center justify-center`}>
-              {kyc.bankVerified ? <CheckCircle2 size={16} className="text-green-500" /> : <Clock size={16} className="text-orange-500" />}
+            <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
+              <CheckCircle2 size={16} className="text-green-500" />
             </div>
             <span className="text-sm font-bold text-foreground/80">Bank Account Linked</span>
           </div>
@@ -81,7 +66,7 @@ const PendingApproval = () => {
             <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
               <CheckCircle2 size={16} className="text-green-500" />
             </div>
-            <span className="text-sm font-bold text-foreground/80">Portfolio Submitted</span>
+            <span className="text-sm font-bold text-foreground/80">Portfolio Review</span>
           </div>
           
           <div className="h-px bg-border my-2 mx-1" />

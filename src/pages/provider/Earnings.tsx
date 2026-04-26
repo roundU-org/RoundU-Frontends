@@ -1,30 +1,16 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, TrendingUp, Calendar, Wallet, Building2, ChevronRight } from "lucide-react";
+import { ArrowLeft, TrendingUp, Calendar } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { getServiceById } from "@/data/mockData";
 import EmptyState from "@/components/EmptyState";
-import ProviderBottomNav from "@/components/ProviderBottomNav";
-import { toast } from "sonner";
+import { Wallet } from "lucide-react";
 
 const Earnings = () => {
   const navigate = useNavigate();
   const { completedJobs } = useApp();
-  const [timeRange, setTimeRange] = useState<"daily" | "weekly" | "monthly">("weekly");
-
   const total = completedJobs.reduce((s, j) => s + j.price, 0);
   const thisWeek = completedJobs.filter((j) => Date.now() - new Date(j.date).getTime() < 7 * 86400000);
-  const thisMonth = completedJobs.filter((j) => Date.now() - new Date(j.date).getTime() < 30 * 86400000);
   const weekTotal = thisWeek.reduce((s, j) => s + j.price, 0);
-  const monthTotal = thisMonth.reduce((s, j) => s + j.price, 0);
-
-  const withdrawBalance = () => {
-    if (total === 0) {
-      toast.error("No balance to withdraw");
-      return;
-    }
-    toast.success(`₹${total} withdrawn to your bank account successfully!`);
-  };
 
   return (
     <div className="min-h-full flex flex-col bg-background pb-8">
@@ -36,43 +22,18 @@ const Earnings = () => {
       </div>
 
       <div className="px-5 space-y-3">
-        <div className="bg-primary rounded-2xl p-5 shadow-card relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10" />
-          <p className="text-xs text-primary-foreground/70 uppercase tracking-wider font-semibold">Available Balance</p>
+        <div className="bg-primary rounded-2xl p-5 shadow-card">
+          <p className="text-xs text-primary-foreground/70 uppercase tracking-wider font-semibold">Total Earnings</p>
           <p className="text-3xl font-extrabold text-primary-foreground mt-1">₹{total}</p>
-          
-          <button 
-            onClick={withdrawBalance}
-            className="w-full mt-4 bg-white text-primary font-bold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform"
-          >
-            <Building2 size={16} /> Withdraw to Bank
-          </button>
-        </div>
-
-        <div className="bg-input rounded-xl p-1 flex">
-          <button 
-            onClick={() => setTimeRange("daily")}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${timeRange === 'daily' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'}`}
-          >
-            Daily
-          </button>
-          <button 
-            onClick={() => setTimeRange("weekly")}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${timeRange === 'weekly' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'}`}
-          >
-            Weekly
-          </button>
-          <button 
-            onClick={() => setTimeRange("monthly")}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${timeRange === 'monthly' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'}`}
-          >
-            Monthly
-          </button>
+          <div className="flex items-center gap-1 mt-2 text-accent">
+            <TrendingUp size={14} />
+            <span className="text-xs font-semibold">+₹{weekTotal} this week</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <Stat label="Completed Jobs" value={String(completedJobs.length)} />
-          <Stat label={timeRange === "monthly" ? "This Month" : timeRange === "weekly" ? "This Week" : "Today"} value={`₹${timeRange === "monthly" ? monthTotal : timeRange === "weekly" ? weekTotal : "0"}`} />
+          <Stat label="This Week" value={`₹${weekTotal}`} />
         </div>
       </div>
 
@@ -102,8 +63,6 @@ const Earnings = () => {
           </div>
         )}
       </div>
-
-      <ProviderBottomNav />
     </div>
   );
 };

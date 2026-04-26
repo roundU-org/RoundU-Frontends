@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Video, Camera, ImagePlus, X, Play, RotateCcw,
   CheckCircle2, ChevronRight, Clock, FileText, Upload,
-  Trash2, Plus, Sparkles, AlertCircle, Image as ImageIcon
+  Trash2, Plus, Sparkles, AlertCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -16,179 +16,64 @@ interface PhotoPair {
 
 interface Certificate {
   id: string;
-  name: string | null;
-  uri: string | null;
+  name: string;
+  uri: string;
 }
 
 const VideoPortfolio = () => {
   const navigate = useNavigate();
 
   // Video state
-  const [videoState, setVideoState] = useState<'idle' | 'camera' | 'recorded' | 'uploaded'>('idle');
+  const [videoState, setVideoState] = useState<'idle' | 'recording' | 'recorded' | 'uploaded'>('idle');
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [videoUri, setVideoUri] = useState<string | null>(null);
 
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
+  // Photos state
+  const [photoPairs, setPhotoPairs] = useState<PhotoPair[]>([]);
 
-  const liveVideoRef = useRef<HTMLVideoElement>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const recordedChunksRef = useRef<BlobPart[]>([]);
+  // Certificates state
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
 
-  const videoGalleryRef = useRef<HTMLInputElement>(null);
-
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
-      setVideoState('camera');
-      setTimeout(() => {
-        if (liveVideoRef.current) {
-          liveVideoRef.current.srcObject = stream;
-        }
-      }, 100);
-    } catch (err) {
-      toast.error('Could not access camera. Please check permissions.');
-    }
-  };
-
-  const stopCamera = () => {
-    if (liveVideoRef.current?.srcObject) {
-      const stream = liveVideoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach(track => track.stop());
-    }
-  };
+  // Recording simulation
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const startRecording = () => {
-    if (!liveVideoRef.current?.srcObject) return;
-    recordedChunksRef.current = [];
-    const stream = liveVideoRef.current.srcObject as MediaStream;
-    try {
-      const recorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = recorder;
-      
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          recordedChunksRef.current.push(e.data);
+    setVideoState('recording');
+    setRecordingSeconds(0);
+    timerRef.current = setInterval(() => {
+      setRecordingSeconds((prev) => {
+        if (prev >= 30) {
+          stopRecording();
+          return 30;
         }
-      };
-
-      recorder.onstop = () => {
-        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
-        setVideoUri(URL.createObjectURL(blob));
-        setVideoState('recorded');
-      };
-
-      recorder.start();
-      setIsRecording(true);
-      setRecordingTime(0);
-    } catch (e) {
-      toast.error('Failed to start recording');
-    }
+        return prev + 1;
+      });
+    }, 1000);
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-    }
-    setIsRecording(false);
-    stopCamera();
+    if (timerRef.current) clearInterval(timerRef.current);
+    setVideoState('recorded');
+    setVideoUri('simulated-video.mp4'); 
   };
 
   useEffect(() => {
-    let interval: any;
-    if (isRecording) {
-      interval = setInterval(() => {
-        setRecordingTime(prev => {
-          if (prev >= 29) {
-            stopRecording();
-            return 30;
-          }
-          return prev + 1;
-        });
-      }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
     }
-    return () => clearInterval(interval);
-  }, [isRecording]);
-
-  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const validTypes = ['video/mp4', 'video/quicktime', 'video/3gpp'];
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const validExts = ['mp4', 'mov', '3gp'];
-
-    if (!validTypes.includes(file.type) && !validExts.includes(ext || '')) {
-      toast.error('Invalid format. Only .mp4, .mov, .3gp are allowed.');
-      e.target.value = '';
-      return;
-    }
-
-    if (file.size > 15 * 1024 * 1024) {
-      toast.error('Video must be less than 15MB.');
-      e.target.value = '';
-      return;
-    }
-
-    const uri = URL.createObjectURL(file);
-    setVideoUri(uri);
-    setVideoState('recorded');
-    e.target.value = '';
-  };
+  }, []);
 
   const resetRecording = () => {
     setVideoState('idle');
+    setRecordingSeconds(0);
     setVideoUri(null);
-    setRecordingTime(0);
-    setIsRecording(false);
   };
 
   const acceptVideo = async () => {
     setVideoState('uploaded');
   };
 
-  // Photos state
-  const [photoPairs, setPhotoPairs] = useState<PhotoPair[]>([]);
-  const photoCameraRef = useRef<HTMLInputElement>(null);
-  const photoGalleryRef = useRef<HTMLInputElement>(null);
-  const [activePhotoTarget, setActivePhotoTarget] = useState<{ id: string, type: 'before' | 'after' } | null>(null);
-
-  const triggerPhoto = (id: string, type: 'before' | 'after', source: 'camera' | 'gallery') => {
-    setActivePhotoTarget({ id, type });
-    if (source === 'camera') photoCameraRef.current?.click();
-    else photoGalleryRef.current?.click();
-  };
-
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !activePhotoTarget) return;
-
-    const validTypes = ['image/jpeg', 'image/heic', 'image/webp'];
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const validExts = ['jpg', 'jpeg', 'heic', 'webp'];
-
-    if (!validTypes.includes(file.type) && !validExts.includes(ext || '')) {
-      toast.error('Invalid format. Only .jpg, .jpeg, .heic, .webp are allowed.');
-      e.target.value = '';
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Photo must be less than 5MB.');
-      e.target.value = '';
-      return;
-    }
-
-    const uri = URL.createObjectURL(file);
-    setPhotoPairs(prev => prev.map(p => {
-      if (p.id === activePhotoTarget.id) {
-        return { ...p, [activePhotoTarget.type]: uri };
-      }
-      return p;
-    }));
-
-    e.target.value = '';
-  };
-
+  // Photo pair management
   const addPhotoPair = () => {
     if (photoPairs.length >= 5) {
       toast.error('You can upload up to 5 before/after photo pairs.');
@@ -202,70 +87,33 @@ const VideoPortfolio = () => {
     setPhotoPairs(photoPairs.filter((p) => p.id !== id));
   };
 
-  // Certificates state
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const certCameraRef = useRef<HTMLInputElement>(null);
-  const certGalleryRef = useRef<HTMLInputElement>(null);
-
-  const [activeCertTarget, setActiveCertTarget] = useState<string | null>(null);
-
-  const triggerCert = (id: string, source: 'camera' | 'gallery') => {
-    setActiveCertTarget(id);
-    if (source === 'camera') certCameraRef.current?.click();
-    else certGalleryRef.current?.click();
-  };
-
+  // Certificate management
   const addCertificate = () => {
     if (certificates.length >= 5) {
       toast.error('You can upload up to 5 certificates.');
       return;
     }
     const id = Date.now().toString();
-    setCertificates([...certificates, { id, name: null, uri: null }]);
-  };
-
-  const handleCertUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !activeCertTarget) return;
-
-    const validTypes = ['image/jpeg', 'image/heic', 'image/webp', 'application/pdf'];
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const validExts = ['jpg', 'jpeg', 'heic', 'webp', 'pdf'];
-
-    if (!validTypes.includes(file.type) && !validExts.includes(ext || '')) {
-      toast.error('Invalid format. Only .jpg, .jpeg, .heic, .webp, .pdf are allowed.');
-      e.target.value = '';
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('File must be less than 5MB.');
-      e.target.value = '';
-      return;
-    }
-
-    const uri = URL.createObjectURL(file);
-    setCertificates(prev => prev.map(c => {
-      if (c.id === activeCertTarget) {
-        return { ...c, name: file.name, uri };
-      }
-      return c;
-    }));
-
-    e.target.value = '';
+    setCertificates([...certificates, { id, name: 'ITI Certificate.pdf', uri: 'cert.pdf' }]);
   };
 
   const removeCertificate = (id: string) => {
     setCertificates(certificates.filter((c) => c.id !== id));
   };
-  // TODO: Rollback this change. Uncomment the line below to enforce video upload before proceeding.
-  // const canProceed = videoState === 'uploaded';
-  const canProceed = true; // Temporary bypass
+
+  const canProceed = videoState === 'uploaded';
 
   const handleNext = () => {
     navigate('/provider/gps-consent');
   };
 
+  const formatTime = (sec: number) => {
+    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const s = (sec % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
+  // Allow "Enter" key to proceed if allowed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && canProceed) {
@@ -301,6 +149,7 @@ const VideoPortfolio = () => {
           </div>
 
           <div className="bg-white rounded-[20px] p-5 shadow-[0_4px_20px_rgba(3,9,22,0.06)]">
+            {/* Idle state */}
             {videoState === 'idle' && (
               <>
                 <div className="rounded-2xl overflow-hidden mb-4 h-[260px] bg-[#1a1a1a] flex items-center justify-center">
@@ -320,101 +169,69 @@ const VideoPortfolio = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
-                  <button 
-                    onClick={startCamera}
-                    className="flex-1 bg-red-600 hover:bg-red-700 active:bg-red-800 transition-colors rounded-xl py-4 flex items-center justify-center gap-2"
-                  >
-                    <Camera size={18} className="text-white" />
-                    <span className="text-[14px] font-bold text-white">Record</span>
-                  </button>
-                  <button 
-                    onClick={() => videoGalleryRef.current?.click()}
-                    className="flex-1 bg-[#152E4B] hover:bg-[#1C3D63] transition-colors rounded-xl py-4 flex items-center justify-center gap-2"
-                  >
-                    <Video size={18} className="text-white" />
-                    <span className="text-[14px] font-bold text-white">Gallery</span>
-                  </button>
-                </div>
-                <input type="file" accept=".mp4,.mov,.3gp,video/mp4,video/quicktime,video/3gpp" ref={videoGalleryRef} className="hidden" onChange={handleVideoUpload} />
+                <button 
+                  onClick={startRecording}
+                  className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 transition-colors rounded-xl py-4 flex items-center justify-center gap-2.5"
+                >
+                  <div className="w-3 h-3 rounded-full bg-white" />
+                  <span className="text-[15px] font-bold text-white">Start Recording</span>
+                </button>
               </>
             )}
 
-            {videoState === 'camera' && (
-              <div className="relative rounded-2xl overflow-hidden mb-4 h-[350px] bg-black flex items-center justify-center">
-                <video 
-                  ref={liveVideoRef} 
-                  autoPlay 
-                  playsInline 
-                  muted 
-                  className="w-full h-full object-cover" 
-                />
-                
-                {/* Teleprompter Overlay */}
-                <div className="absolute top-4 left-4 right-4 bg-black/50 backdrop-blur-md p-3.5 rounded-xl border border-white/10 z-10">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Sparkles size={14} className="text-amber-400" />
-                    <span className="text-xs font-bold text-white/90 uppercase tracking-wider">Teleprompter</span>
-                  </div>
-                  <p className="text-white/90 text-sm font-medium leading-relaxed">
-                    "Hi, I'm <span className="text-amber-400">[Name]</span>. I've been a <span className="text-amber-400">[Service]</span> for <span className="text-amber-400">[X]</span> years. I specialize in <span className="text-amber-400">[Specialty]</span>."
-                  </p>
-                </div>
-
-                {/* Timer/Progress Bar */}
-                {isRecording && (
-                  <div className="absolute top-0 left-0 right-0 h-1.5 bg-gray-800/50 z-20">
-                    <div 
-                      className="h-full bg-red-500 transition-all duration-1000 ease-linear"
-                      style={{ width: `${(recordingTime / 30) * 100}%` }}
-                    />
-                  </div>
-                )}
-                
-                {/* Timer Text */}
-                {isRecording && (
-                  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-red-600 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg z-20">
+            {/* Recording state */}
+            {videoState === 'recording' && (
+              <>
+                <div className="rounded-2xl overflow-hidden mb-4 h-[260px] bg-[#0a0a0a] relative flex items-center justify-center">
+                  <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-red-600/90 px-2.5 py-1 rounded-md z-10">
                     <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                    <span className="text-white text-sm font-bold tracking-wider font-mono">00:{(30 - recordingTime).toString().padStart(2, '0')}</span>
+                    <span className="text-[11px] font-extrabold text-white tracking-widest">REC</span>
                   </div>
-                )}
-
-                {/* Controls */}
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-6 px-4 items-center z-20">
-                  {!isRecording ? (
-                    <>
-                      <button 
-                        onClick={() => { stopCamera(); setVideoState('idle'); }}
-                        className="w-12 h-12 flex items-center justify-center bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full transition-colors text-white"
-                      >
-                        <X size={20} />
-                      </button>
-                      <button 
-                        onClick={startRecording}
-                        className="w-16 h-16 flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-full transition-colors ring-4 ring-red-600/30"
-                      >
-                        <div className="w-6 h-6 bg-white rounded-full" />
-                      </button>
-                    </>
-                  ) : (
-                    <button 
-                      onClick={stopRecording}
-                      className="w-16 h-16 flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-full transition-colors ring-4 ring-red-600/30"
-                    >
-                      <div className="w-6 h-6 bg-white rounded-sm" />
-                    </button>
-                  )}
+                  <div className="flex flex-col items-center gap-3 relative z-10">
+                    <Camera size={48} className="text-gray-500" strokeWidth={1.5} />
+                    <p className="text-[13px] text-gray-400">Recording...</p>
+                  </div>
                 </div>
-              </div>
+
+                <div className="flex items-center justify-center gap-1.5 mb-2.5">
+                  <Clock size={18} className="text-red-600" />
+                  <span className="text-2xl font-bold text-red-600 tabular-nums">{formatTime(recordingSeconds)}</span>
+                  <span className="text-base font-medium text-gray-400"> / 00:30</span>
+                </div>
+
+                <div className="h-1.5 bg-gray-200 rounded-full mb-4 overflow-hidden">
+                  <div 
+                    className="h-full bg-red-600 transition-all duration-1000 ease-linear rounded-full"
+                    style={{ width: `${(recordingSeconds / 30) * 100}%` }}
+                  />
+                </div>
+
+                <button 
+                  onClick={stopRecording}
+                  className="w-full bg-[#030916] hover:bg-black active:bg-neutral-800 transition-colors rounded-xl py-4 flex items-center justify-center gap-2.5"
+                >
+                  <div className="w-3.5 h-3.5 rounded-sm bg-red-600" />
+                  <span className="text-[15px] font-bold text-white">Stop Recording</span>
+                </button>
+              </>
             )}
 
+            {/* Recorded state */}
             {videoState === 'recorded' && (
               <>
-                <div className="rounded-2xl overflow-hidden mb-4 h-[260px] bg-[#0a0a0a] flex items-center justify-center relative">
-                  {videoUri && <video src={videoUri} controls className="w-full h-full object-contain" />}
+                <div className="rounded-2xl overflow-hidden mb-4 h-[260px] bg-[#0a0a0a] flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-3 w-full h-full justify-center">
+                    <Play size={48} className="text-white ml-2" strokeWidth={1.5} />
+                    <p className="text-[13px] text-gray-400">{formatTime(recordingSeconds)} recorded</p>
+                  </div>
                 </div>
 
                 <div className="flex gap-2.5 mt-4">
+                  <button className="flex-1 flex items-center justify-center gap-1.5 py-3.5 rounded-xl bg-gray-100 border border-gray-200 hover:bg-gray-200 transition-colors">
+                    <Play size={18} className="text-[#152E4B]" />
+                    <span className="text-[13px] font-bold text-[#152E4B]">Play</span>
+                  </button>
+
                   <button 
                     onClick={resetRecording}
                     className="flex-1 flex items-center justify-center gap-1.5 py-3.5 rounded-xl bg-gray-100 border border-gray-200 hover:bg-gray-200 transition-colors"
@@ -434,12 +251,13 @@ const VideoPortfolio = () => {
               </>
             )}
 
+            {/* Uploaded state */}
             {videoState === 'uploaded' && (
               <div className="flex flex-col items-center py-6 gap-2">
                 <CheckCircle2 size={40} className="text-emerald-600 mb-1" fill="currentColor" />
                 <h3 className="text-xl font-bold text-[#152E4B]">Video uploaded!</h3>
                 <p className="text-[13px] text-gray-500 text-center leading-relaxed max-w-[280px]">
-                  Your intro is ready. Customers will see this before booking you.
+                  Your 30-second intro is ready. Customers will see this before booking you.
                 </p>
                 <button 
                   onClick={resetRecording}
@@ -480,56 +298,19 @@ const VideoPortfolio = () => {
                 </div>
                 <div className="flex items-center justify-center gap-2.5">
                   <div className="flex-1">
-                    {pair.before ? (
-                      <div className="relative h-[90px] rounded-lg overflow-hidden border border-gray-200">
-                        <img src={pair.before} alt="Before" className="w-full h-full object-cover" />
-                        <button onClick={() => setPhotoPairs(prev => prev.map(p => p.id === pair.id ? {...p, before: null} : p))} className="absolute top-1 right-1 bg-black/50 p-1 rounded-full text-white">
-                          <X size={12} />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="h-[90px] rounded-lg bg-white border border-dashed border-gray-300 flex flex-col items-center justify-center gap-1.5">
-                        <span className="text-[10px] font-semibold text-gray-400">Before</span>
-                        <div className="flex gap-1.5">
-                          <button onClick={() => triggerPhoto(pair.id, 'before', 'camera')} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"><Camera size={14} className="text-[#152E4B]" /></button>
-                          <button onClick={() => triggerPhoto(pair.id, 'before', 'gallery')} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"><ImageIcon size={14} className="text-[#152E4B]" /></button>
-                        </div>
-                      </div>
-                    )}
+                    <div className="h-[90px] rounded-lg bg-white border border-dashed border-gray-300 flex flex-col items-center justify-center gap-1 cursor-pointer hover:bg-gray-50 transition-colors">
+                      <Camera size={20} className="text-gray-400" />
+                      <span className="text-[10px] font-semibold text-gray-400">Before</span>
+                    </div>
                   </div>
                   <ChevronRight size={20} className="text-gray-400" />
                   <div className="flex-1">
-                    {pair.after ? (
-                      <div className="relative h-[90px] rounded-lg overflow-hidden border border-gray-200">
-                        <img src={pair.after} alt="After" className="w-full h-full object-cover" />
-                        <button onClick={() => setPhotoPairs(prev => prev.map(p => p.id === pair.id ? {...p, after: null} : p))} className="absolute top-1 right-1 bg-black/50 p-1 rounded-full text-white">
-                          <X size={12} />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="h-[90px] rounded-lg bg-white border border-dashed border-gray-300 flex flex-col items-center justify-center gap-1.5">
-                        <span className="text-[10px] font-semibold text-gray-400">After</span>
-                        <div className="flex gap-1.5">
-                          <button onClick={() => triggerPhoto(pair.id, 'after', 'camera')} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"><Camera size={14} className="text-[#152E4B]" /></button>
-                          <button onClick={() => triggerPhoto(pair.id, 'after', 'gallery')} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"><ImageIcon size={14} className="text-[#152E4B]" /></button>
-                        </div>
-                      </div>
-                    )}
+                    <div className="h-[90px] rounded-lg bg-white border border-dashed border-gray-300 flex flex-col items-center justify-center gap-1 cursor-pointer hover:bg-gray-50 transition-colors">
+                      <Camera size={20} className="text-gray-400" />
+                      <span className="text-[10px] font-semibold text-gray-400">After</span>
+                    </div>
                   </div>
                 </div>
-                
-                {/* Caption input */}
-                {(pair.before || pair.after) && (
-                  <div className="mt-3">
-                    <input 
-                      type="text" 
-                      placeholder="Caption (e.g. 'Kitchen rewiring')" 
-                      value={pair.caption}
-                      onChange={(e) => setPhotoPairs(prev => prev.map(p => p.id === pair.id ? {...p, caption: e.target.value} : p))}
-                      className="w-full bg-white border border-gray-200 rounded-lg p-3 text-[13px] focus:outline-none focus:border-[#152E4B] text-[#152E4B]"
-                    />
-                  </div>
-                )}
               </div>
             ))}
 
@@ -542,8 +323,6 @@ const VideoPortfolio = () => {
                 {photoPairs.length === 0 ? 'Add Before & After Photos' : 'Add Another Pair'}
               </span>
             </button>
-            <input type="file" accept="image/*" capture="environment" ref={photoCameraRef} className="hidden" onChange={handlePhotoUpload} />
-            <input type="file" accept=".jpg,.jpeg,.heic,.webp,image/jpeg,image/heic,image/webp" ref={photoGalleryRef} className="hidden" onChange={handlePhotoUpload} />
           </div>
         </section>
 
@@ -564,44 +343,17 @@ const VideoPortfolio = () => {
               Upload any professional certifications, trade licenses, or training certificates. These boost your profile credibility.
             </p>
 
-            {certificates.map((cert, index) => (
-              <div key={cert.id} className="bg-gray-100 rounded-xl p-3.5 mb-3">
-                <div className="flex justify-between items-center mb-2.5">
-                  <span className="text-[13px] font-bold text-[#152E4B]">Certificate {index + 1}</span>
-                  <button onClick={() => removeCertificate(cert.id)} className="p-1 hover:bg-gray-200 rounded-full transition-colors">
-                    <Trash2 size={16} className="text-red-600" />
-                  </button>
+            {certificates.map((cert) => (
+              <div key={cert.id} className="flex items-center gap-3 bg-gray-100 rounded-xl p-3.5 mb-2.5">
+                <div className="w-9 h-9 rounded-lg bg-[#152E4B]/5 flex items-center justify-center shrink-0">
+                  <FileText size={18} className="text-[#152E4B]" />
                 </div>
-                {cert.uri ? (
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-[#152E4B]/5 flex items-center justify-center shrink-0 overflow-hidden">
-                      {cert.name?.endsWith('.pdf') ? <FileText size={18} className="text-[#152E4B]" /> : <img src={cert.uri} alt="cert" className="w-full h-full object-cover" />}
-                    </div>
-                    <span className="flex-1 text-sm font-semibold text-[#152E4B] truncate">
-                      {cert.name}
-                    </span>
-                    <button onClick={() => setCertificates(prev => prev.map(c => c.id === cert.id ? {...c, uri: null, name: null} : c))} className="p-1.5 hover:bg-gray-200 rounded-full transition-colors shrink-0">
-                      <X size={18} className="text-gray-400" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex gap-2 mt-1">
-                    <button 
-                      onClick={() => triggerCert(cert.id, 'camera')}
-                      className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-dashed border-[#152E4B]/30 bg-white hover:bg-gray-50 transition-colors"
-                    >
-                      <Camera size={18} className="text-[#152E4B]" />
-                      <span className="text-sm font-bold text-[#152E4B]">Take Photo</span>
-                    </button>
-                    <button 
-                      onClick={() => triggerCert(cert.id, 'gallery')}
-                      className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-dashed border-[#152E4B]/30 bg-white hover:bg-gray-50 transition-colors"
-                    >
-                      <Upload size={18} className="text-[#152E4B]" />
-                      <span className="text-sm font-bold text-[#152E4B]">Upload File</span>
-                    </button>
-                  </div>
-                )}
+                <span className="flex-1 text-sm font-semibold text-[#152E4B] truncate">
+                  {cert.name}
+                </span>
+                <button onClick={() => removeCertificate(cert.id)} className="p-1.5 hover:bg-gray-200 rounded-full transition-colors shrink-0">
+                  <X size={18} className="text-gray-400" />
+                </button>
               </div>
             ))}
 
@@ -609,13 +361,9 @@ const VideoPortfolio = () => {
               onClick={addCertificate}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-dashed border-[#152E4B]/30 bg-white hover:bg-gray-50 transition-colors mt-1"
             >
-              <Plus size={18} className="text-[#152E4B]" />
-              <span className="text-sm font-bold text-[#152E4B]">
-                {certificates.length === 0 ? 'Add Certificate' : 'Add Another'}
-              </span>
+              <Upload size={18} className="text-[#152E4B]" />
+              <span className="text-sm font-bold text-[#152E4B]">Upload Certificate</span>
             </button>
-            <input type="file" accept="image/*" capture="environment" ref={certCameraRef} className="hidden" onChange={handleCertUpload} />
-            <input type="file" accept=".jpg,.jpeg,.heic,.webp,.pdf,image/jpeg,image/heic,image/webp,application/pdf" ref={certGalleryRef} className="hidden" onChange={handleCertUpload} />
 
             <div className="mt-3.5 p-3 rounded-xl bg-gray-100">
               <p className="text-[11px] font-bold text-[#152E4B] mb-1">Examples:</p>
