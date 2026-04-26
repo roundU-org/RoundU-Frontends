@@ -23,16 +23,26 @@ import BookingTime from "@/pages/BookingTime";
 import BookingNotes from "@/pages/BookingNotes";
 import BookingPayment from "@/pages/BookingPayment";
 import BookingSuccess from "@/pages/BookingSuccess";
+import BookService from "@/pages/BookService";
+import SearchingProviders from "@/pages/SearchingProviders";
 import Tracking from "@/pages/Tracking";
 import Rating from "@/pages/Rating";
 import Bookings from "@/pages/Bookings";
 import BookingDetail from "@/pages/BookingDetail";
 import Profile from "@/pages/Profile";
+import EditProfile from "@/pages/EditProfile";
 import Emergency from "@/pages/Emergency";
 import Wallet from "@/pages/Wallet";
 import WalletTopUp from "@/pages/WalletTopUp";
 import WalletHistory from "@/pages/WalletHistory";
 import ReferEarn from "@/pages/ReferEarn";
+import Offers from "@/pages/Offers";
+import Settings from "@/pages/Settings";
+import Notifications from "@/pages/Notifications";
+import HelpSupport from "@/pages/HelpSupport";
+import ReportIssue from "@/pages/ReportIssue";
+import ManageSubscriptions from "@/pages/ManageSubscriptions";
+import Subscription from "@/pages/Subscription";
 import Cancellation from "@/pages/Cancellation";
 import ProviderDashboard from "@/pages/provider/Dashboard";
 import ProviderJob from "@/pages/provider/Job";
@@ -73,6 +83,8 @@ const AppRoutes = () => (
       <Route path="/service-select/:serviceId" element={<RequireAuth><ServiceSelection /></RequireAuth>} />
       <Route path="/providers/:serviceId" element={<RequireAuth><ProvidersPage /></RequireAuth>} />
       <Route path="/provider/:id" element={<RequireAuth><ProviderDetail /></RequireAuth>} />
+      <Route path="/book-service/:serviceId" element={<RequireAuth><BookService /></RequireAuth>} />
+      <Route path="/searching-providers/:serviceId" element={<RequireAuth><SearchingProviders /></RequireAuth>} />
       <Route path="/booking/date" element={<RequireAuth><BookingDate /></RequireAuth>} />
       <Route path="/booking/time" element={<RequireAuth><BookingTime /></RequireAuth>} />
       <Route path="/booking/notes" element={<RequireAuth><BookingNotes /></RequireAuth>} />
@@ -83,11 +95,19 @@ const AppRoutes = () => (
       <Route path="/bookings" element={<RequireAuth><Bookings /></RequireAuth>} />
       <Route path="/bookings/:id" element={<RequireAuth><BookingDetail /></RequireAuth>} />
       <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
+      <Route path="/profile/edit" element={<RequireAuth><EditProfile /></RequireAuth>} />
       <Route path="/emergency" element={<RequireAuth><Emergency /></RequireAuth>} />
       <Route path="/wallet" element={<RequireAuth><Wallet /></RequireAuth>} />
       <Route path="/wallet/topup" element={<RequireAuth><WalletTopUp /></RequireAuth>} />
       <Route path="/wallet/history" element={<RequireAuth><WalletHistory /></RequireAuth>} />
       <Route path="/refer-earn" element={<RequireAuth><ReferEarn /></RequireAuth>} />
+      <Route path="/offers" element={<RequireAuth><Offers /></RequireAuth>} />
+      <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
+      <Route path="/notifications" element={<RequireAuth><Notifications /></RequireAuth>} />
+      <Route path="/support" element={<RequireAuth><HelpSupport /></RequireAuth>} />
+      <Route path="/report-issue" element={<RequireAuth><ReportIssue /></RequireAuth>} />
+      <Route path="/subscriptions" element={<RequireAuth><Subscription /></RequireAuth>} />
+      <Route path="/subscriptions/manage" element={<RequireAuth><ManageSubscriptions /></RequireAuth>} />
       <Route path="/cancellation" element={<RequireAuth><Cancellation /></RequireAuth>} />
 
       {/* Provider */}

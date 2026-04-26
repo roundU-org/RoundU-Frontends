@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search, MapPin, Bell, ChevronRight, Menu, X, Home as HomeIcon, CalendarCheck,
-  Settings, HelpCircle, LogOut, Smartphone, Wallet, Gift, Clock, Star
+  Settings, HelpCircle, LogOut, Smartphone, Wallet, Gift, Clock, Star, Plus, AlertTriangle, Sparkles, Crown
 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { services, quickFixes, popularTasks } from "@/data/mockData";
@@ -24,8 +24,8 @@ const Home = () => {
     { icon: CalendarCheck, label: "My Bookings", path: "/bookings" },
     { icon: Wallet, label: "Wallet", path: "/wallet" },
     { icon: Smartphone, label: "Refer & Earn", path: "/refer-earn" },
-    { icon: Settings, label: "Settings", path: "/profile" },
-    { icon: HelpCircle, label: "Help & Support", path: "/help" },
+    { icon: Settings, label: "Settings", path: "/settings" },
+    { icon: HelpCircle, label: "Help & Support", path: "/support" },
   ];
 
   return (
@@ -118,12 +118,12 @@ const Home = () => {
             <Menu size={20} className="text-[#152E4B]" />
           </button>
           <div>
-            <p className="text-[11px] text-gray-400 font-medium flex items-center gap-1">
-              <MapPin size={11} className="text-[#152E4B]" /> {user.address}
-            </p>
-            <h1 className="text-xl font-extrabold text-[#030916] mt-0.5">
+            <h1 className="text-xl font-extrabold text-[#030916]">
               Hi {user.name.split(" ")[0]}! 👋
             </h1>
+            <p className="text-[11px] text-gray-400 font-medium flex items-center gap-1 mt-0.5">
+              <MapPin size={11} className="text-[#152E4B]" /> {user.address}
+            </p
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -134,14 +134,14 @@ const Home = () => {
             <Wallet size={20} className="text-[#152E4B]" />
           </button>
           <button
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate("/notifications")}
             className="w-10 h-10 rounded-full bg-[#F0F2F5] flex items-center justify-center relative active:scale-95 transition-transform"
           >
             <Bell size={20} className="text-[#152E4B]" />
             {notifications.length > 0 && (
               <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#F59E0B] border-2 border-white" />
             )}
-          </button>
+          </button
         </div>
       </div>
 
@@ -161,8 +161,25 @@ const Home = () => {
       {/* ─── Scrollable Content ─── */}
       <div className="flex-1 overflow-y-auto">
 
+        {/* ═══ AI RECOMMENDATIONS ═══ */}
+        <div className="px-5 pb-2 animate-fade-in" style={{ animationDelay: "0.09s" }}>
+          <button
+            onClick={() => goToProviders("ac_cleaning")}
+            className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 hover:shadow-md transition-all active:scale-[0.98]"
+          >
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+              <Sparkles size={18} className="text-blue-600" />
+            </div>
+            <div className="text-left flex-1">
+              <h3 className="text-[13px] font-extrabold text-[#152E4B]">Your AC might need a filter clean</h3>
+              <p className="text-[10px] text-blue-600 mt-0.5 leading-snug">Based on your home's previous history. Book now.</p>
+            </div>
+            <ChevronRight size={18} className="text-blue-400 flex-shrink-0" />
+          </button>
+        </div>
+
         {/* ═══ BROWSE SERVICES ═══ */}
-        <div className="px-5 pt-5 pb-2 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        <div className="px-5 pt-3 pb-2 animate-fade-in" style={{ animationDelay: "0.1s" }}>
           <div className="flex items-center justify-between mb-1">
             <div>
               <h2 className="text-[17px] font-extrabold text-[#030916]">Browse Services</h2>
@@ -273,6 +290,7 @@ const Home = () => {
         {/* ═══ REFER & EARN ═══ */}
         <div className="px-5 pb-6 animate-fade-in" style={{ animationDelay: "0.25s" }}>
           <button
+            onClick={() => navigate("/refer-earn")}
             className="w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#FEF3C7] to-[#FDE68A] border border-[#F59E0B]/20 hover:shadow-md transition-all active:scale-[0.98]"
           >
             <div className="w-12 h-12 rounded-xl bg-[#F59E0B]/20 flex items-center justify-center flex-shrink-0">

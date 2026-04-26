@@ -21,7 +21,23 @@ const ProviderDetail = () => {
   const handleBook = () => {
     dispatch({ type: "SELECT_PROVIDER", id: provider.id });
     dispatch({ type: "SELECT_SERVICE", id: provider.serviceId });
-    navigate("/booking/date");
+    // In a real app, you would make an API call here with data from BookService. 
+    // We create a temp mock booking ID and push it to context.
+    const tempId = `b_${Math.random().toString(36).substr(2, 9)}`;
+    dispatch({ 
+      type: "ADD_BOOKING", 
+      booking: {
+        id: tempId,
+        serviceId: provider.serviceId,
+        providerId: provider.id,
+        date: "Oct 24, 2026",
+        time: "10:00 AM",
+        status: "confirmed",
+        price: 499
+      }
+    });
+
+    navigate(`/booking/success/${tempId}`);
   };
 
   return (

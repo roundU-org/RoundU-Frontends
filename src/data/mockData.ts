@@ -1,5 +1,5 @@
 import {
-  Zap, Droplets, Sparkles, Car, User, LucideIcon,
+  Zap, Droplets, Sparkles, Car, User, LucideIcon, SprayCan
 } from "lucide-react";
 
 export interface Service {
@@ -92,7 +92,7 @@ export const services: Service[] = [
   { 
     id: "housekeeping", 
     label: "House Keeping", 
-    icon: Sparkles, 
+    icon: SprayCan,
     desc: "Deep & regular",
     commonProblems: ["Kitchen cleaning", "Bathroom deep clean", "Full home clean", "Sofa cleaning"],
     relatedServiceIds: ["plumber", "electrician", "carwash"]
@@ -111,7 +111,7 @@ export const quickFixes: QuickFix[] = [
   { id: "pipe", label: "Pipe leakage", icon: Droplets },
   { id: "switch", label: "Switch repair", icon: Zap },
   { id: "carwash", label: "Car detailing", icon: Car },
-  { id: "cleaning", label: "Deep cleaning", icon: Sparkles },
+  { id: "cleaning", label: "Deep cleaning", icon: SprayCan },
   { id: "driver", label: "Request drive", icon: User },
 ];
 

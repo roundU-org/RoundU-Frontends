@@ -1,4 +1,4 @@
-import { Home, CalendarCheck, User } from "lucide-react";
+import { Home, CalendarCheck, User, Crown } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
