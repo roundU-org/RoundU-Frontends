@@ -60,26 +60,47 @@ const GPSMonitor = () => {
           </div>
         </div>
 
-        <div className="p-5 space-y-4 bg-white border-t border-border">
+        <div className="p-5 space-y-5 bg-white border-t border-border">
            <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
-                 <ShieldCheck size={20} />
-              </div>
-              <div className="flex-1">
-                 <p className="text-sm font-bold text-foreground">Your Privacy Matters</p>
-                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                   Location data is only shared with customers when you are on your way to their job. We never sell your location data to third parties.
-                 </p>
+               <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+                  <ShieldCheck size={20} />
+               </div>
+               <div className="flex-1">
+                  <p className="text-sm font-bold text-foreground">Anti-Bypass Protection</p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    We monitor location patterns to prevent off-app servicing. 3 suspicious patterns will lead to automatic account suspension.
+                  </p>
+               </div>
+           </div>
+
+           <div className="space-y-3">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">Recent Activity (Last 24h)</p>
+              <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+                 <div className="p-3 flex items-center justify-between border-b border-border">
+                    <div className="flex items-center gap-3">
+                       <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                       <span className="text-xs font-medium text-foreground">Location Tracking Active</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">Always</span>
+                 </div>
+                 <div className="p-3 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                       <div className="w-2 h-2 rounded-full bg-blue-500" />
+                       <span className="text-xs font-medium text-foreground">Job Route Recorded</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">2 hours ago</span>
+                 </div>
               </div>
            </div>
            
-           <div className="p-3 bg-muted rounded-xl flex gap-3 items-start">
-              <Info size={16} className="text-primary shrink-0 mt-0.5" />
-              <p className="text-[10px] font-semibold text-muted-foreground leading-relaxed">
-                Keeping tracking enabled helps our system predict where the most demand is and routes jobs to you faster.
+           <div className="p-4 bg-orange-50 rounded-2xl border border-orange-100 flex gap-3 items-start">
+              <Info size={16} className="text-orange-600 shrink-0 mt-0.5" />
+              <p className="text-[10px] font-bold text-orange-900 leading-relaxed">
+                Why am I being tracked? Tracking allows us to show your live location to customers during active bookings and ensures fair job distribution.
               </p>
            </div>
         </div>
+
       </div>
 
       <ProviderBottomNav />

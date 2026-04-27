@@ -46,6 +46,7 @@ import Subscription from "@/pages/Subscription";
 import Cancellation from "@/pages/Cancellation";
 import ProviderDashboard from "@/pages/provider/Dashboard";
 import ProviderJob from "@/pages/provider/Job";
+import Jobs from "@/pages/provider/Jobs";
 import ProviderEarnings from "@/pages/provider/Earnings";
 import ProviderProfile from "@/pages/provider/ProviderProfile";
 import ProviderVideoPortfolio from "@/pages/provider/VideoPortfolio";
@@ -54,7 +55,11 @@ import PersonalDetails from "@/pages/provider/PersonalDetails";
 import DigiLockerKYC from "@/pages/provider/DigiLockerKYC";
 import GpsConsent from "@/pages/provider/GpsConsent";
 import PendingApproval from "@/pages/provider/PendingApproval";
+import Portfolio from "@/pages/provider/Portfolio";
+import Documents from "@/pages/provider/Documents";
+import GPSMonitor from "@/pages/provider/GPSMonitor";
 import ServiceSelection from "@/pages/ServiceSelection";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -119,8 +124,13 @@ const AppRoutes = () => (
       <Route path="/provider/gps-consent" element={<RequireAuth><GpsConsent /></RequireAuth>} />
       <Route path="/provider/pending-approval" element={<RequireAuth><PendingApproval /></RequireAuth>} />
       <Route path="/provider/job/:id" element={<RequireAuth><ProviderJob /></RequireAuth>} />
+      <Route path="/provider/jobs" element={<RequireAuth><Jobs /></RequireAuth>} />
       <Route path="/provider/earnings" element={<RequireAuth><ProviderEarnings /></RequireAuth>} />
       <Route path="/provider/profile" element={<RequireAuth><ProviderProfile /></RequireAuth>} />
+      <Route path="/provider/portfolio" element={<RequireAuth><Portfolio /></RequireAuth>} />
+      <Route path="/provider/documents" element={<RequireAuth><Documents /></RequireAuth>} />
+      <Route path="/provider/gps-monitor" element={<RequireAuth><GPSMonitor /></RequireAuth>} />
+
 
       <Route path="*" element={<NotFound />} />
     </Routes>

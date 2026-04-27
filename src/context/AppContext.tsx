@@ -46,6 +46,11 @@ interface State {
   // New Flow State
   isNewUser: boolean;
   walletBalance: number;
+  isOnline: boolean;
+  providerStats: {
+    rating: number;
+    responseRate: number;
+  };
   onboardingData: {
     serviceIds: string[];
     homeType: string;
@@ -78,6 +83,8 @@ type Action =
   | { type: "UPDATE_ONBOARDING"; patch: Partial<State["onboardingData"]> }
   | { type: "SET_NEW_USER"; value: boolean }
   | { type: "UPDATE_WALLET"; amount: number }
+  | { type: "SET_ONLINE"; value: boolean }
+  | { type: "UPDATE_STATS"; patch: Partial<State["providerStats"]> }
   | { type: "LOGOUT" };
 
 const initialState: State = {
@@ -109,6 +116,11 @@ const initialState: State = {
   },
   isNewUser: true,
   walletBalance: 0,
+  isOnline: true,
+  providerStats: {
+    rating: 4.8,
+    responseRate: 96,
+  },
   onboardingData: {
     serviceIds: [],
     homeType: "",
@@ -213,6 +225,10 @@ function reducer(state: State, action: Action): State {
       return { ...state, isNewUser: action.value };
     case "UPDATE_WALLET":
       return { ...state, walletBalance: state.walletBalance + action.amount };
+    case "SET_ONLINE":
+      return { ...state, isOnline: action.value };
+    case "UPDATE_STATS":
+      return { ...state, providerStats: { ...state.providerStats, ...action.patch } };
     case "LOGOUT":
       return { ...initialState };
     default:

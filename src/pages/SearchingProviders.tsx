@@ -29,13 +29,13 @@ interface ProviderDot {
 const SearchingProviders = () => {
   const { serviceId } = useParams();
   const navigate = useNavigate();
-  
+
   const [dots, setDots] = useState<ProviderDot[]>([]);
   const [foundCount, setFoundCount] = useState(0);
   const [statusIndex, setStatusIndex] = useState(0);
   const [activeDotIndex, setActiveDotIndex] = useState(0);
   const [isLongWait, setIsLongWait] = useState(false);
-  
+
   const nextId = useRef(0);
   const startTime = useRef(Date.now());
 
@@ -79,7 +79,7 @@ const SearchingProviders = () => {
       const distance = 100 + Math.random() * 110; // 100-210px
       const duration = 2200 + Math.random() * 1200; // 2200-3400ms
       const initials = INITIALS_POOL[Math.floor(Math.random() * INITIALS_POOL.length)];
-      
+
       const newDot: ProviderDot = {
         id,
         initials,
@@ -115,10 +115,10 @@ const SearchingProviders = () => {
 
   return (
     <div className="min-h-screen bg-[#EEF2F7] flex flex-col font-['DM_Sans',sans-serif] overflow-hidden select-none">
-      
+
       {/* Top Bar */}
       <div className="px-5 pt-6 pb-2 flex items-center gap-4 relative z-20">
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100 active:scale-90 transition-transform"
         >
@@ -129,18 +129,18 @@ const SearchingProviders = () => {
 
       {/* Map Area */}
       <div className="flex-1 relative min-h-[340px] flex items-center justify-center">
-        
+
         {/* SVG Map Canvas */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <svg 
-            width="380" 
-            height="340" 
-            viewBox="0 0 380 340" 
+          <svg
+            width="380"
+            height="340"
+            viewBox="0 0 380 340"
             className="w-full h-full max-w-md"
           >
             {/* Background */}
             <rect width="380" height="340" fill="#E8EEF5" />
-            
+
             {/* Grid Lines */}
             <g stroke="#D5DFE8" strokeWidth="0.5">
               {[...Array(13)].map((_, i) => (
@@ -165,38 +165,57 @@ const SearchingProviders = () => {
             <path d="M50,0 C80,150 300,190 330,340" stroke="#C8D6E2" strokeWidth="3" fill="none" opacity="0.5" />
 
             {/* Ripple Rings */}
-            <circle cx="190" cy="170" r="0" fill="none" stroke="#152E4B" strokeWidth="1.5">
-               <animate attributeName="r" from="0" to="200" dur="3s" begin="0s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0 0.8 1" />
-               <animate attributeName="opacity" from="0.5" to="0" dur="3s" begin="0s" repeatCount="indefinite" />
+            <circle cx="190" cy="170" r="0" fill="none" stroke="url(#blue-grad)" strokeWidth="1.5">
+              <animate attributeName="r" from="0" to="200" dur="3s" begin="0s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0 0.8 1" />
+              <animate attributeName="opacity" from="0.6" to="0" dur="3s" begin="0s" repeatCount="indefinite" />
             </circle>
-            <circle cx="190" cy="170" r="0" fill="none" stroke="#152E4B" strokeWidth="1">
-               <animate attributeName="r" from="0" to="200" dur="3s" begin="1s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0 0.8 1" />
-               <animate attributeName="opacity" from="0.35" to="0" dur="3s" begin="1s" repeatCount="indefinite" />
+            <circle cx="190" cy="170" r="0" fill="none" stroke="url(#blue-grad)" strokeWidth="1">
+              <animate attributeName="r" from="0" to="200" dur="3s" begin="1s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0 0.8 1" />
+              <animate attributeName="opacity" from="0.4" to="0" dur="3s" begin="1s" repeatCount="indefinite" />
             </circle>
             <circle cx="190" cy="170" r="0" fill="none" stroke="#F59E0B" strokeWidth="0.8">
-               <animate attributeName="r" from="0" to="200" dur="3s" begin="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0 0.8 1" />
-               <animate attributeName="opacity" from="0.3" to="0" dur="3s" begin="2s" repeatCount="indefinite" />
+              <animate attributeName="r" from="0" to="220" dur="3s" begin="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0 0.8 1" />
+              <animate attributeName="opacity" from="0.3" to="0" dur="3s" begin="2s" repeatCount="indefinite" />
             </circle>
+
+            {/* Gradients */}
+            <defs>
+              <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#152E4B" />
+                <stop offset="100%" stopColor="#1C3D63" />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Center Pin Glow */}
+            <circle cx="190" cy="170" r="22" fill="rgba(21,46,75,0.05)" className="animate-pulse" />
 
             {/* Center Pin */}
             <circle cx="190" cy="170" r="18" fill="rgba(21,46,75,0.08)" />
-            <g className="animate-pin-pulse">
-               <circle cx="190" cy="170" r="12" fill="white" stroke="#152E4B" strokeWidth="1.5" />
-               <path d="M190,175 L186,169 A4,4 0 1,1 194,169 Z" fill="#152E4B" transform="translate(0, -2)" />
-               <circle cx="190" cy="168.5" r="1.5" fill="white" />
+            <g className="animate-pin-pulse" filter="url(#glow)">
+              <circle cx="190" cy="170" r="12" fill="white" stroke="#152E4B" strokeWidth="1.5" />
+              <path d="M190,175 L186,169 A4,4 0 1,1 194,169 Z" fill="#152E4B" transform="translate(0, -2)" />
+              <circle cx="190" cy="168.5" r="1.5" fill="white" />
             </g>
           </svg>
         </div>
 
         {/* Found Counter Badge (Top Right) */}
-        <div className="absolute top-4 right-4 bg-white border border-[#152E4B1A] py-1.5 px-3.5 rounded-[10px] shadow-sm z-10 animate-fade-in">
-           <span className="text-[11px] font-[500] text-[#152E4B]">{foundCount} found nearby</span>
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md border border-[#152E4B1A] py-1.5 px-3.5 rounded-[12px] shadow-sm z-10 animate-fade-in flex items-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-[11px] font-[600] text-[#152E4B] tracking-tight">{foundCount} pros found</span>
         </div>
 
         {/* Floating Provider Dots Layer */}
         <div className="absolute inset-0 pointer-events-none" style={{ perspective: '1000px' }}>
           {dots.map((dot) => (
-            <div 
+            <div
               key={dot.id}
               className="absolute animate-provider-dot"
               style={{
@@ -208,8 +227,8 @@ const SearchingProviders = () => {
                 transform: `rotate(${dot.angle}rad) translateX(${dot.distance}px)`
               } as any}
             >
-              <div className="w-[30px] h-[30px] rounded-full bg-white border border-[#152E4B2E] flex items-center justify-center shadow-sm -rotate-dot">
-                 <span className="text-[9px] font-[600] text-[#152E4B]">{dot.initials}</span>
+              <div className="w-[34px] h-[34px] rounded-full bg-white/80 backdrop-blur-sm border border-white flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.08)] -rotate-dot transition-transform">
+                <span className="text-[10px] font-[800] text-[#152E4B]">{dot.initials}</span>
               </div>
             </div>
           ))}
@@ -219,9 +238,9 @@ const SearchingProviders = () => {
       {/* Bottom Panel */}
       <div className="bg-white rounded-t-[24px] shadow-[0_-8px_30px_rgba(0,0,0,0.04)] px-6 pt-3 pb-8 relative z-20 transition-transform">
         <div className="w-[36px] h-1.5 bg-[#E1E8EF] rounded-full mx-auto mb-6" />
-        
+
         <div className="flex flex-col items-center text-center">
-          
+
           {foundCount >= 3 && (foundCount % 3 === 0 || foundCount % 3 === 1) && (
             <div className="bg-[#F0FDF4] border border-[#BBF7D0] px-4 py-1.5 rounded-full mb-4 animate-badge-up">
               <span className="text-[13px] font-[600] text-[#166534]">{foundCount} professionals found</span>
@@ -229,22 +248,22 @@ const SearchingProviders = () => {
           )}
 
           <h2 className="text-[18px] font-[600] text-[#030916] mb-1.5">Finding nearby professionals</h2>
-          
+
           <div className="h-6 flex items-center justify-center overflow-hidden w-full relative">
-             <p 
-               key={statusIndex + (isLongWait ? 'wait' : '')} 
-               className="text-[13px] text-[#7A8BA0] font-[400] animate-status-fade absolute"
-             >
-                {isLongWait ? "Still searching for the best providers near you..." : SECONDARY_STATUS_MESSAGES[statusIndex]}
-             </p>
+            <p
+              key={statusIndex + (isLongWait ? 'wait' : '')}
+              className="text-[13px] text-[#7A8BA0] font-[400] animate-status-fade absolute"
+            >
+              {isLongWait ? "Still searching for the best providers near you..." : SECONDARY_STATUS_MESSAGES[statusIndex]}
+            </p>
           </div>
 
           {/* Animated Progress Dots */}
           <div className="flex gap-2.5 my-6">
             {[...Array(5)].map((_, i) => (
-              <div 
-                key={i} 
-                className={`w-[7px] h-[7px] rounded-full transition-all duration-300 ${i === activeDotIndex ? 'bg-[#F59E0B] scale-[1.35]' : 'bg-[#D1DCE8]'}`} 
+              <div
+                key={i}
+                className={`w-[7px] h-[7px] rounded-full transition-all duration-300 ${i === activeDotIndex ? 'bg-[#F59E0B] scale-[1.35]' : 'bg-[#D1DCE8]'}`}
               />
             ))}
           </div>
@@ -256,7 +275,7 @@ const SearchingProviders = () => {
             <TrustIndicator label="Trusted service" />
           </div>
 
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="text-[14px] font-[600] text-[#7A8BA0] hover:text-[#152E4B] transition-colors"
           >
@@ -332,7 +351,7 @@ const TrustIndicator = ({ label }: { label: string }) => (
   <div className="flex items-center gap-1.5">
     <div className="w-4 h-4 rounded-full bg-[#152E4B] flex items-center justify-center">
       <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
-        <path d="M1 3L3 5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M1 3L3 5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
     <span className="text-[11px] font-[500] text-[#152E4B]">{label}</span>

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, AlertCircle, ChevronRight, FileText, Landmark, UserCheck } from "lucide-react";
+import { ArrowLeft, CheckCircle2, AlertCircle, ChevronRight, FileText, Landmark, UserCheck, ShieldCheck } from "lucide-react";
 import ProviderBottomNav from "@/components/ProviderBottomNav";
 import { toast } from "sonner";
 
@@ -50,7 +50,7 @@ const Documents = () => {
                 className={`w-full p-4 flex items-center gap-4 active:bg-input transition-colors ${idx !== docs.length - 1 ? 'border-b border-border' : ''}`}
               >
                 <div className={`w-12 h-12 rounded-xl ${doc.bg} ${doc.color} flex items-center justify-center shrink-0`}>
-                  <doc.icon size={22} />
+                   <doc.icon size={22} />
                 </div>
                 <div className="flex-1 text-left">
                   <p className="text-sm font-bold text-foreground">{doc.label}</p>
@@ -72,14 +72,33 @@ const Documents = () => {
           </div>
         </div>
 
-        <div className="p-4 bg-muted/50 rounded-2xl border border-border/50">
-          <p className="text-[10px] font-bold text-muted-foreground flex items-center gap-2">
-            <AlertCircle size={12} /> Privacy Note
+        <div className="space-y-3">
+           <div className="flex items-center justify-between px-1">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Certificates & Licenses</p>
+              <button className="text-primary text-[10px] font-bold">+ Add New</button>
+           </div>
+           <div className="bg-white border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm border-dashed">
+              <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 border border-border">
+                 <FileText size={22} className="text-muted-foreground" />
+              </div>
+              <div className="flex-1">
+                 <p className="text-sm font-bold text-foreground">Electrician License (Level 1)</p>
+                 <p className="text-[10px] text-muted-foreground">Uploaded on 12 Oct 2023</p>
+              </div>
+              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">Valid</span>
+           </div>
+        </div>
+
+        <div className="p-5 bg-slate-900 rounded-[24px] border border-slate-800 shadow-xl relative overflow-hidden mt-4">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 rounded-full blur-2xl -mr-12 -mt-12" />
+          <p className="text-[10px] font-bold text-slate-400 flex items-center gap-2 mb-2">
+            <ShieldCheck size={14} className="text-primary" /> Security & Privacy
           </p>
-          <p className="text-[10px] text-muted-foreground/80 mt-1 leading-relaxed">
-            Your documents are encrypted and stored securely. They are only used for mandatory verification required by government regulations.
+          <p className="text-[10px] text-slate-300 leading-relaxed">
+            Your data is encrypted using AES-256 and stored in a secure vault. We only share verified status with customers, never your private document images.
           </p>
         </div>
+
       </div>
 
       <ProviderBottomNav />

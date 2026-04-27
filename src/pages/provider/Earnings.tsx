@@ -21,21 +21,42 @@ const Earnings = () => {
         <h1 className="text-lg font-bold text-foreground">Earnings</h1>
       </div>
 
-      <div className="px-5 space-y-3">
-        <div className="bg-primary rounded-2xl p-5 shadow-card">
-          <p className="text-xs text-primary-foreground/70 uppercase tracking-wider font-semibold">Total Earnings</p>
-          <p className="text-3xl font-extrabold text-primary-foreground mt-1">₹{total}</p>
-          <div className="flex items-center gap-1 mt-2 text-accent">
-            <TrendingUp size={14} />
-            <span className="text-xs font-semibold">+₹{weekTotal} this week</span>
+      <div className="px-5 space-y-4">
+        <div className="bg-slate-900 rounded-[28px] p-6 shadow-xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/20 transition-colors" />
+          <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">Available Balance</p>
+          <div className="flex items-end gap-2 mt-2">
+            <p className="text-4xl font-extrabold text-white">₹12,400</p>
+            <div className="mb-1.5 flex items-center gap-1 text-emerald-400 text-xs font-bold bg-emerald-400/10 px-2 py-0.5 rounded-full">
+              <TrendingUp size={12} /> +12%
+            </div>
           </div>
+          <button className="w-full mt-6 py-4 rounded-2xl bg-primary text-primary-foreground font-extrabold text-sm active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+            Withdraw to Bank
+          </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Stat label="Completed Jobs" value={String(completedJobs.length)} />
-          <Stat label="This Week" value={`₹${weekTotal}`} />
+        <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+          {["Today", "This Week", "This Month"].map((label) => (
+            <button
+              key={label}
+              className={`px-5 py-2.5 rounded-full text-[11px] font-bold whitespace-nowrap border transition-all ${
+                label === "This Week" 
+                  ? "bg-primary border-primary text-primary-foreground shadow-md" 
+                  : "bg-white border-border text-muted-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Stat label="Jobs Done" value={String(completedJobs.length)} color="text-blue-600" />
+          <Stat label="Earned" value={`₹${weekTotal}`} color="text-emerald-600" />
         </div>
       </div>
+
 
       <div className="px-5 mt-6 flex-1 overflow-y-auto">
         <h2 className="text-sm font-bold text-foreground mb-3">Completed Jobs</h2>
@@ -67,11 +88,12 @@ const Earnings = () => {
   );
 };
 
-const Stat = ({ label, value }: { label: string; value: string }) => (
-  <div className="bg-card border border-border rounded-2xl p-3 shadow-card">
-    <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">{label}</p>
-    <p className="text-lg font-extrabold text-foreground mt-0.5">{value}</p>
+const Stat = ({ label, value, color = "text-foreground" }: { label: string; value: string; color?: string }) => (
+  <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
+    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{label}</p>
+    <p className={`text-xl font-extrabold mt-0.5 ${color}`}>{value}</p>
   </div>
 );
+
 
 export default Earnings;

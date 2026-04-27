@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Mic, Square, Play, Trash2, ImagePlus, X } from "lucide-react";
+import { ArrowLeft, Mic, Square, Play, Trash2 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 
 const BookingNotes = () => {
@@ -14,22 +14,7 @@ const BookingNotes = () => {
   const [audioBlob, setAudioBlob] = useState<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Photo state
-  const [photos, setPhotos] = useState<string[]>([]);
 
-  const addPhoto = () => {
-    if (photos.length >= 2) return;
-    // Mocking addition of a photo
-    const mockImages = [
-      "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=400&fit=crop"
-    ];
-    setPhotos([...photos, mockImages[photos.length]]);
-  };
-
-  const removePhoto = (idx: number) => {
-    setPhotos(photos.filter((_, i) => i !== idx));
-  };
 
   const startRecording = () => {
     setIsRecording(true);
@@ -157,36 +142,7 @@ const BookingNotes = () => {
           )}
         </div>
 
-        {/* Photo Upload Section */}
-        <div className="bg-card border border-border rounded-2xl p-4 shadow-card">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs font-bold text-foreground">Attach Photos (Optional)</h3>
-            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{photos.length}/2</span>
-          </div>
 
-          <div className="flex gap-3">
-            {photos.map((url, i) => (
-              <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border border-border">
-                <img src={url} alt={`Job detail ${i+1}`} className="w-full h-full object-cover" />
-                <button
-                  onClick={() => removePhoto(i)}
-                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center text-white backdrop-blur-sm"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
-            {photos.length < 2 && (
-              <button
-                onClick={addPhoto}
-                className="w-24 h-24 rounded-xl border-2 border-dashed border-primary/30 flex flex-col items-center justify-center gap-1.5 text-primary hover:bg-primary/5 transition-colors"
-              >
-                <ImagePlus size={20} />
-                <span className="text-[10px] font-bold">Add Photo</span>
-              </button>
-            )}
-          </div>
-        </div>
 
         <div className="bg-card border border-border rounded-2xl p-4 shadow-card">
           <h3 className="text-xs font-bold text-foreground mb-3">Booking Summary</h3>

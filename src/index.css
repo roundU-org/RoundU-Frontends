@@ -61,6 +61,22 @@
     --glass-bg: hsla(0, 0%, 100%, 0.85);
     --glass-border: hsla(220, 13%, 91%, 1);
   }
+
+  .provider-theme {
+    --background: 213 31% 95%; /* #eef2f7 */
+    --foreground: 221 76% 5%;   /* #030916 */
+    --primary: 212 56% 19%;     /* #152E4B */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 32 93% 34%;    /* #A95D06 */
+    --secondary-foreground: 0 0% 100%;
+    --accent: 38 91% 50%;       /* #F59E0B */
+    --accent-foreground: 221 76% 5%;
+    --card: 0 0% 100%;          /* #ffffff */
+    --card-foreground: 221 76% 5%;
+    --border: 213 31% 88%;
+    --input: 0 0% 100%;
+    --ring: 212 56% 19%;
+  }
 }
 
 @layer base {

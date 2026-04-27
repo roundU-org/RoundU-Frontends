@@ -93,9 +93,10 @@ const IncomingRequestPopup = ({ request, onAccept, onReject }: IncomingRequestPo
 
         <div className="p-6">
           <p className="text-xs font-bold uppercase text-muted-foreground mb-1">Estimated Earnings</p>
-          <p className="text-3xl font-extrabold text-emerald-600">₹{request.price}</p>
-          <p className="text-xs text-muted-foreground mt-1">Includes all taxes and fees</p>
+          <p className="text-3xl font-extrabold text-emerald-600">₹{request.price} - {request.price + 200}</p>
+          <p className="text-xs text-muted-foreground mt-1">Final amount depends on work complexity</p>
         </div>
+
 
         <div className="p-4 pt-0 grid grid-cols-2 gap-3 mt-auto">
           <button

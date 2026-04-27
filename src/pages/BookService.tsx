@@ -109,16 +109,7 @@ const BookService = () => {
                 </button>
              </div>
            )}
-           {serviceId !== "drivers" && (
-             <div className="mt-4">
-                <h3 className="text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-3">Upload Photos <span className="opacity-60">(Optional)</span></h3>
-                <div className="flex gap-3">
-                  <button className="w-[70px] h-[70px] rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 flex flex-col items-center justify-center gap-1 hover:border-blue-300 hover:bg-blue-50 transition-colors">
-                     <ImagePlus size={20} className="text-gray-400" />
-                  </button>
-                </div>
-             </div>
-           )}
+
         </div>
 
         {/* Address */}

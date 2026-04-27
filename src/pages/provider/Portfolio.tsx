@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Plus, Image as ImageIcon, Play } from "lucide-react";
 import ProviderBottomNav from "@/components/ProviderBottomNav";
 import { toast } from "sonner";
 
@@ -31,22 +31,62 @@ const Portfolio = () => {
         </div>
       </div>
 
-      <div className="p-5 flex-1 overflow-y-auto">
-        <div className="grid grid-cols-2 gap-4">
-          {mockPortfolio.map((item) => (
-            <div key={item.id} className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm group active:scale-[0.98] transition-transform">
-              <div className="aspect-[4/3] relative overflow-hidden">
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="flex-1 overflow-y-auto">
+        {/* Video Introduction Section */}
+        <div className="p-5">
+           <div className="bg-slate-900 rounded-[28px] p-6 shadow-xl relative overflow-hidden group">
+              <div className="flex items-center justify-between mb-4">
+                 <h2 className="text-white font-extrabold text-base">Video Introduction</h2>
+                 <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
               </div>
-              <div className="p-3">
-                <p className="text-sm font-bold text-foreground truncate">{item.title}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{item.date}</p>
+              <div className="aspect-video bg-slate-800 rounded-2xl relative overflow-hidden flex items-center justify-center border border-slate-700">
+                 <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=80" alt="Video Preview" className="w-full h-full object-cover opacity-50" />
+                 <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
+                       <Play size={24} className="text-white fill-white ml-1" />
+                    </div>
+                 </div>
               </div>
-            </div>
-          ))}
+              <button className="w-full mt-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-xs hover:bg-white/10 transition-colors">
+                Re-record Introduction
+              </button>
+           </div>
+        </div>
+
+        {/* Before/After Portfolio Section */}
+        <div className="px-5 pb-10 space-y-6">
+          <div className="flex items-center justify-between">
+             <h2 className="text-sm font-bold text-foreground">Service History (Before & After)</h2>
+             <button className="text-primary text-[11px] font-bold">Manage Pairs</button>
+          </div>
+
+          <div className="space-y-4">
+            {mockPortfolio.slice(0, 3).map((item) => (
+              <div key={item.id} className="bg-card border border-border rounded-[24px] p-4 shadow-sm space-y-3">
+                <div className="flex justify-between items-center">
+                   <p className="text-sm font-bold text-foreground">{item.title}</p>
+                   <p className="text-[10px] text-muted-foreground">{item.date}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                   <div className="space-y-1.5">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase text-center">Before</p>
+                      <div className="aspect-square rounded-2xl overflow-hidden border border-border shadow-inner">
+                         <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=300&q=80" alt="Before" className="w-full h-full object-cover grayscale-[0.3]" />
+                      </div>
+                   </div>
+                   <div className="space-y-1.5">
+                      <p className="text-[10px] font-bold text-emerald-600 uppercase text-center">After</p>
+                      <div className="aspect-square rounded-2xl overflow-hidden border border-emerald-200 shadow-inner ring-2 ring-emerald-500/20">
+                         <img src={item.image} alt="After" className="w-full h-full object-cover" />
+                      </div>
+                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
 
       <button 
         onClick={handleUpload}

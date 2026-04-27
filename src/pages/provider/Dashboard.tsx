@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { 
   Bell, Wallet, User, MapPin, Calendar, Clock, Check, X, 
   Power, Star, TrendingUp, AlertTriangle, Lightbulb, 
-  ChevronRight, Inbox, Briefcase, FileText, Image as ImageIcon, Video, Play, Mic, Eye
+  ChevronRight, Inbox, Briefcase, FileText, Image as ImageIcon, Video, Play, Mic, Eye,
+  ClipboardCheck, Images
 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { getServiceById, ProviderRequest } from "@/data/mockData";
@@ -40,7 +41,7 @@ const Dashboard = () => {
   }, [isCritical]);
 
   return (
-    <div className="min-h-full flex flex-col bg-background pb-24 relative">
+    <div className="min-h-full flex flex-col bg-background pb-24 relative provider-theme">
       {/* PIP Modal */}
       {isCritical && showPip && (
         <PIPModal 
@@ -56,7 +57,7 @@ const Dashboard = () => {
         />
       )}
       {/* Header */}
-      <div className="px-5 pt-6 pb-4 flex items-center justify-between animate-fade-in bg-white sticky top-0 z-10 shadow-sm">
+      <div className="px-5 pt-6 pb-4 flex items-center justify-between animate-fade-in bg-card sticky top-0 z-10 shadow-sm">
         <div>
           <p className="text-xs text-muted-foreground font-medium">Provider Dashboard</p>
           <h1 className="text-xl font-extrabold text-foreground mt-0.5">Hi, {user.name.split(" ")[0]}</h1>
@@ -139,39 +140,46 @@ const Dashboard = () => {
         {/* Stats Row */}
         <div className="px-5 mb-6">
           <div className="flex overflow-x-auto pb-2 gap-3 no-scrollbar -mx-5 px-5">
-            <div className="bg-card border border-border rounded-2xl p-3.5 min-w-[120px] shadow-card flex-shrink-0">
-              <div className="flex items-center gap-1.5 mb-2 text-muted-foreground">
-                <Check size={14} />
-                <span className="text-[10px] uppercase tracking-wider font-semibold">Today</span>
+            <div className="bg-card border border-border rounded-2xl p-3.5 min-w-[130px] shadow-card flex-shrink-0">
+              <div className="flex items-center gap-1.5 mb-2 text-emerald-600">
+                <Wallet size={14} />
+                <span className="text-[10px] uppercase tracking-wider font-bold">Earnings Today</span>
               </div>
-              <p className="text-xl font-extrabold text-foreground">{completedJobs.length} <span className="text-sm font-medium text-muted-foreground">jobs</span></p>
+              <p className="text-xl font-extrabold text-foreground">₹{earnings} <span className="text-[10px] font-medium text-muted-foreground"> earned</span></p>
             </div>
             <div className="bg-card border border-border rounded-2xl p-3.5 min-w-[120px] shadow-card flex-shrink-0">
+              <div className="flex items-center gap-1.5 mb-2 text-primary">
+                <Briefcase size={14} />
+                <span className="text-[10px] uppercase tracking-wider font-bold">Completed</span>
+              </div>
+              <p className="text-xl font-extrabold text-foreground">{completedJobs.length} <span className="text-[10px] font-medium text-muted-foreground"> jobs</span></p>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-3.5 min-w-[110px] shadow-card flex-shrink-0">
               <div className="flex items-center gap-1.5 mb-2 text-warning">
                 <Star size={14} fill="currentColor" />
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Rating</span>
+                <span className="text-[10px] uppercase tracking-wider font-bold">Rating</span>
               </div>
-              <p className="text-xl font-extrabold text-foreground">{providerStats.rating} <span className="text-sm font-medium text-muted-foreground">/ 5.0</span></p>
+              <p className="text-xl font-extrabold text-foreground">{providerStats.rating} <span className="text-[10px] font-medium text-muted-foreground">/ 5.0</span></p>
             </div>
             <div className="bg-card border border-border rounded-2xl p-3.5 min-w-[120px] shadow-card flex-shrink-0">
               <div className="flex items-center gap-1.5 mb-2 text-success">
                 <TrendingUp size={14} />
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Response</span>
+                <span className="text-[10px] uppercase tracking-wider font-bold">Response</span>
               </div>
-              <p className="text-xl font-extrabold text-foreground">{providerStats.responseRate}<span className="text-sm font-medium text-muted-foreground">%</span></p>
+              <p className="text-xl font-extrabold text-foreground">{providerStats.responseRate}<span className="text-[10px] font-medium text-muted-foreground">%</span></p>
             </div>
           </div>
         </div>
 
         {/* AI Tip Card */}
         <div className="px-5 mb-6">
-          <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 flex gap-3 items-start shadow-sm">
-            <div className="bg-indigo-100 p-2 rounded-lg flex-shrink-0">
-              <Lightbulb size={20} className="text-indigo-600" />
+          <div className="bg-white border border-border/50 rounded-[14px] p-4 flex gap-3 items-start shadow-sm">
+            <div className="bg-primary/5 p-2.5 rounded-xl flex-shrink-0">
+              <Lightbulb size={20} className="text-primary" />
             </div>
             <div>
-              <p className="text-sm font-bold text-indigo-900 mb-1">Smart Suggestion</p>
-              <p className="text-xs text-indigo-700 leading-relaxed">
+              <p className="text-sm font-bold text-[#030916] mb-1">Smart Suggestion</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 You have 2 jobs in Indiranagar tomorrow afternoon. We recommend staying nearby to minimize travel time between bookings.
               </p>
             </div>
@@ -181,33 +189,61 @@ const Dashboard = () => {
         {/* Quick Actions */}
         <div className="px-5 mb-6">
           <h2 className="text-sm font-bold text-foreground mb-3">Quick Actions</h2>
-          <div className="grid grid-cols-4 gap-3">
-            <button onClick={() => navigate('/provider/jobs')} className="flex flex-col items-center gap-2">
-              <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center border border-orange-100 active:scale-95 transition-transform shadow-sm">
-                <Briefcase size={20} className="text-orange-500" />
+          <div className="grid grid-cols-2 gap-4">
+            <button 
+              onClick={() => navigate('/provider/jobs')} 
+              className="bg-white rounded-[14px] p-4 flex flex-col items-start gap-3 shadow-sm border border-border/50 active:scale-[0.97] active:bg-primary/5 transition-all duration-200 group text-left"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary transition-colors">
+                <ClipboardCheck size={22} />
               </div>
-              <span className="text-[10px] font-bold text-foreground">My Jobs</span>
+              <div>
+                <p className="text-sm font-bold text-[#030916]">My Jobs</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{accepted.length + pending.length} active jobs</p>
+              </div>
             </button>
-            <button onClick={() => navigate('/provider/earnings')} className="flex flex-col items-center gap-2">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 active:scale-95 transition-transform shadow-sm">
-                <Wallet size={20} className="text-emerald-500" />
+            
+            <button 
+              onClick={() => navigate('/provider/earnings')} 
+              className="bg-white rounded-[14px] p-4 flex flex-col items-start gap-3 shadow-sm border border-border/50 active:scale-[0.97] active:bg-primary/5 transition-all duration-200 group text-left"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary transition-colors">
+                <Wallet size={22} />
               </div>
-              <span className="text-[10px] font-bold text-foreground">Earnings</span>
+              <div>
+                <p className="text-sm font-bold text-[#030916]">My Earnings</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">₹{earnings} earned</p>
+              </div>
             </button>
-            <button onClick={() => navigate('/provider/video-portfolio')} className="flex flex-col items-center gap-2">
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100 active:scale-95 transition-transform shadow-sm">
-                <FileText size={20} className="text-blue-500" />
+            
+            <button 
+              onClick={() => navigate('/provider/portfolio')} 
+              className="bg-white rounded-[14px] p-4 flex flex-col items-start gap-3 shadow-sm border border-border/50 active:scale-[0.97] active:bg-primary/5 transition-all duration-200 group text-left"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary transition-colors">
+                <Images size={22} />
               </div>
-              <span className="text-[10px] font-bold text-foreground">Portfolio</span>
+              <div>
+                <p className="text-sm font-bold text-[#030916]">My Portfolio</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Showcase work</p>
+              </div>
             </button>
-            <button onClick={() => navigate('/provider/digilocker-kyc')} className="flex flex-col items-center gap-2">
-              <div className="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center border border-purple-100 active:scale-95 transition-transform shadow-sm">
-                <User size={20} className="text-purple-500" />
+            
+            <button 
+              onClick={() => navigate('/provider/documents')} 
+              className="bg-white rounded-[14px] p-4 flex flex-col items-start gap-3 shadow-sm border border-border/50 active:scale-[0.97] active:bg-primary/5 transition-all duration-200 group text-left"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary transition-colors">
+                <FileText size={22} />
               </div>
-              <span className="text-[10px] font-bold text-foreground">Documents</span>
+              <div>
+                <p className="text-sm font-bold text-[#030916]">My Documents</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">KYC & Verification</p>
+              </div>
             </button>
           </div>
         </div>
+
 
         {/* Incoming Requests */}
         <div className="px-5 mb-6">
@@ -347,7 +383,7 @@ const Dashboard = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setSelectedJob(null)} />
           <div className="relative w-full max-w-sm bg-card border border-border rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[80vh] animate-fade-in">
-            <div className="px-5 py-4 border-b border-border flex justify-between items-center bg-white sticky top-0 z-10">
+            <div className="px-5 py-4 border-b border-border flex justify-between items-center bg-card sticky top-0 z-10">
               <h2 className="text-lg font-bold text-foreground">Job Details</h2>
               <button onClick={() => setSelectedJob(null)} className="p-1 rounded-full hover:bg-muted transition-colors">
                 <X size={20} className="text-muted-foreground" />
@@ -429,7 +465,7 @@ const Dashboard = () => {
               )}
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border flex gap-2 bg-white">
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border flex gap-2 bg-card">
               <button
                 onClick={() => {
                   dispatch({ type: "REJECT_REQUEST", id: selectedJob.id });
